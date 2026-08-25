@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>G-STEEL READERS - CUSTOM IMMERSION TIMER & READING LOG</title>
+  <!-- Google Fonts: Orbitron (G-SHOCKデジタル風) & Outfit (モダンメカニカル) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+  <!-- メインコンテナ -->
+  <div class="app-container">
+    
+    <!-- ヘッダー / ブランドロゴ ＆ モード切替 -->
+    <header class="app-header">
+      <div class="brand-title">
+        <span class="brand-badge">G-STEEL</span>
+        <span class="brand-text">READING IMMERSION TIMER</span>
+      </div>
+      <nav class="nav-tabs">
+        <button id="tab-timer" class="tab-btn active" data-tab="timer-section">
+          <span class="tab-icon">⏱</span> タイマー
+        </button>
+        <button id="tab-log" class="tab-btn" data-tab="log-section">
+          <span class="tab-icon">📚</span> 読書ノート & 履歴
+        </button>
+      </nav>
+    </header>
+
+    <!-- SECTION 1: タイマーメイン画面 -->
+    <main id="timer-section" class="tab-content active">
+      
+      <!-- G-SHOCK ウォッチケース ユニット -->
+      <div class="watch-casing">
+        
+        <div class="bezel-top-label">SHOCK RESISTANT • CUSTOM TIMER</div>
+        <div class="bezel-screw top-left"></div>
+        <div class="bezel-screw top-right"></div>
+        <div class="bezel-screw bottom-left"></div>
+        <div class="bezel-screw bottom-right"></div>
+
+        <!-- 音声ステータス LED インジケーター -->
+        <div class="voice-status-bar" id="voice-status-bar">
+          <span class="mic-icon" id="mic-icon">🎤</span>
+          <span class="voice-state-text" id="voice-state-text">音声認識: リスニング中 («5分» «15分30秒» «開始» «ストップ» 等)</span>
+        </div>
+
+        <!-- 時間設定クイック設定 ＆ 手動入力ツールバー -->
+        <div class="timer-setting-bar">
+          <span class="setting-label">⚙ 時間設定 (声 or 指定):</span>
+          <button class="btn-preset" data-min="5">5分</button>
+          <button class="btn-preset" data-min="10">10分</button>
+          <button class="btn-preset" data-min="15">15分</button>
+          <button class="btn-preset active" data-min="30">30分(初期)</button>
+          
+          <div class="custom-time-inputs">
+            <input type="number" id="input-custom-min" min="0" max="180" value="30" placeholder="分">
+            <span>分</span>
+            <input type="number" id="input-custom-sec" min="0" max="59" value="0" placeholder="秒">
+            <span>秒</span>
+            <button id="btn-set-custom-time" class="btn-set-time">セット</button>
+          </div>
+        </div>
+
+        <!-- BGM コントロール ＆ 音量ツールバー -->
+        <div class="bgm-setting-bar">
+          <span class="setting-label">🎵 BGM設定:</span>
+          <button id="btn-toggle-bgm" class="btn-bgm-toggle">🔊 BGM ON</button>
+          <div class="volume-control">
+            <span class="vol-icon">音量:</span>
+            <input type="range" id="input-bgm-volume" min="0" max="100" value="70" class="volume-slider">
+            <span id="volume-value-text" class="vol-text">70%</span>
+          </div>
+          <span id="audio-status-badge" class="vol-text" style="color:#00ff88; font-size:0.75rem; margin-left:auto;">[🔊 READY]</span>
+        </div>
+
+        <!-- アナログ時計＆液晶ハイブリッドダイヤル -->
+        <div class="dial-container">
+          <canvas id="clock-canvas" width="440" height="440"></canvas>
+          
+          <!-- ダイヤル上のサブ液晶ディスプレイ -->
+          <div class="lcd-display-panel">
+            <div class="lcd-header">
+              <span id="phase-indicator" class="lcd-badge">PHASE 1 : WARM-UP</span>
+              <span id="bgm-indicator" class="lcd-badge-sub">CAFÉ ACOUSTIC BGM</span>
+            </div>
+            <div class="lcd-timer-digits" id="digital-timer">30:00</div>
+            <div class="lcd-sub-info">
+              <span id="phase-timer-text">切替まで: 10:00 (10分毎)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- コントロールボタン群 -->
+        <div class="control-panel">
+          <button id="btn-start" class="btn-metal btn-start">
+            <span class="btn-glow"></span>
+            <span class="btn-label">START / PAUSE</span>
+          </button>
+          <button id="btn-reset" class="btn-metal btn-reset">
+            <span class="btn-label">RESET / 停止</span>
+          </button>
+        </div>
+
+        <div class="bezel-bottom-label">WATER 20BAR RESIST • AUTO DYNAMIC BGM</div>
+      </div>
+
+      <!-- 没入モチベーション・メッセージ表示部 -->
+      <div class="motivation-banner" id="motivation-banner">
+        <div class="banner-icon">💬</div>
+        <div class="banner-content">
+          <div class="banner-title" id="banner-title">IMMERSION SYSTEM ACTIVE</div>
+          <div class="banner-text" id="banner-text">声で「5分」「15分30秒」のように時間を伝えてから「開始」と言うか、ボタンでスタートできます。</div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- SECTION 2: 読書ノート & 履歴画面 -->
+    <section id="log-section" class="tab-content">
+      
+      <div class="dashboard-grid">
+        <div class="stat-card">
+          <div class="stat-label" id="stat-period-label">選択期間の読書時間</div>
+          <div class="stat-value" id="stat-month-hours">0.0 <span class="stat-unit">時間</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">通算読書時間</div>
+          <div class="stat-value" id="stat-total-hours">0.0 <span class="stat-unit">時間</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label" id="stat-sessions-label">対象セッション数</div>
+          <div class="stat-value" id="stat-total-sessions">0 <span class="stat-unit">回</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label" id="stat-books-label">対象読破・記録書籍数</div>
+          <div class="stat-value" id="stat-total-books">0 <span class="stat-unit">冊</span></div>
+        </div>
+      </div>
+
+      <div class="log-actions-bar">
+        <div class="view-mode-toggle">
+          <button id="btn-view-timeline" class="btn-mode active" title="タイムライン履歴表示">📜 タイムライン</button>
+          <button id="btn-view-books" class="btn-mode" title="本ごとのブックリスト表示">📚 ブックリスト</button>
+        </div>
+
+        <div class="sort-filter-wrapper" id="sort-filter-wrapper">
+          <span class="filter-label">🔀 並べ替え:</span>
+          <select id="sort-books-select" class="period-select-box">
+            <option value="date_desc">📅 年月日順 (最新順)</option>
+            <option value="date_asc">📅 年月日順 (古い順)</option>
+            <option value="title_asc">🔤 タイトル順 (あいうえお順)</option>
+            <option value="author_asc">👤 著者順 (あいうえお順)</option>
+          </select>
+        </div>
+
+        <div class="period-filter-wrapper">
+          <span class="filter-label">📅 期間:</span>
+          <select id="filter-period-select" class="period-select-box">
+            <option value="all">全期間 (All Time)</option>
+          </select>
+        </div>
+
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="search-input" placeholder="書名・著者名・日付でノートを検索..." autocomplete="off">
+          <button id="btn-clear-search" class="btn-icon">×</button>
+        </div>
+
+        <button id="btn-open-add-modal" class="btn-metal btn-small">+ ノート追加</button>
+        <button id="btn-export-json" class="btn-metal btn-small btn-secondary">💾 JSON</button>
+      </div>
+
+      <div class="history-list-container">
+        <div class="history-header">
+          <h2 id="history-header-title">READING ARCHIVE LOG (読書履歴)</h2>
+          <span id="history-count" class="history-count">全 0 件</span>
+        </div>
+        <div id="history-cards-grid" class="history-cards-grid"></div>
+        <div id="empty-history-msg" class="empty-msg">
+          <p>まだ読書記録がありません。タイマーを完了してノートを記録しましょう！</p>
+        </div>
+      </div>
+
+    </section>
+
+    <footer class="app-footer">
+      <p>G-STEEL READERS Immersion System • Dynamic Immersion Companion</p>
+    </footer>
+
+  </div>
+
+  <!-- 読書ノート記録用モーダル -->
+  <div id="record-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div id="modal-header-badge" class="modal-badge">SESSION COMPLETE!</div>
+        <h2 id="modal-header-title">🎉 読書セッション達成！お疲れ様でした</h2>
+      </div>
+
+      <div class="modal-prompt-box">
+        <p id="modal-voice-prompt">🎙 「今日読んだ本を記録しましょう。何の本を読みましたか？」</p>
+        <div class="modal-voice-status" id="modal-voice-status">
+          <span class="pulse-dot"></span> 音声で「書名・著者・何ページから何ページ」を話してください
+        </div>
+      </div>
+
+      <form id="record-form" class="record-form">
+        <input type="hidden" id="edit-log-id" value="">
+        <div class="form-group">
+          <label for="book-title">書名 (本のタイトル) <span class="required">*</span></label>
+          <input type="text" id="book-title" placeholder="例: 思考の整理学" required>
+        </div>
+
+        <div class="form-group">
+          <label for="book-author">著者名</label>
+          <input type="text" id="book-author" placeholder="例: 外山滋比古">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="page-start">開始ページ</label>
+            <input type="number" id="page-start" placeholder="例: 45" min="0">
+          </div>
+          <div class="form-group col-sep">〜</div>
+          <div class="form-group col">
+            <label for="page-end">終了ページ</label>
+            <input type="number" id="page-end" placeholder="例: 90" min="0">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="book-memo">一言メモ / 没入の気づき</label>
+          <textarea id="book-memo" rows="2" placeholder="心に残った言葉や要点など..."></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" id="btn-modal-voice-rec" class="btn-metal btn-voice">
+            🎙 声で入力する
+          </button>
+          <button type="submit" class="btn-metal btn-save">
+            💾 ノートを保存する
+          </button>
+          <button type="button" id="btn-modal-skip" class="btn-metal btn-skip">
+            あとで記録 / スキップ
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="audioEngine.js?v=1000"></script>
+  <script src="clock.js?v=1000"></script>
+  <script src="storage.js?v=1000"></script>
+  <script src="logUI.js?v=1000"></script>
+  <script src="voice.js?v=1000"></script>
+  <script src="app.js?v=1000"></script>
+</body>
+</html>

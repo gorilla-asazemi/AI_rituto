@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>『＠ゴリーダー元素』| 森のジャングル美術館</title>
+  <meta name="description" content="森のジャングル美術館へようこそ。リーダーの哀愁と本音が集う言葉のギャラリー空間『＠ゴリーダー元素』。">
+  
+  <!-- Google Fonts (和モダン＆洗練された美術館タイポグラフィ) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@600&family=Noto+Serif+JP:wght@400;600;700;900&family=Shippori+Mincho:wght@500;700;800&family=Zen+Maru+Gothic:wght@500;700;900&family=Yuji+Boku&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Ambient Botanical Background & Light -->
+  <div class="jungle-bg">
+    <div class="jungle-art-layer"></div>
+    <!-- Komorebi (Divine Sunlight Rays) -->
+    <div class="komorebi-rays"></div>
+    <div class="spotlight spotlight-1"></div>
+    <div class="spotlight spotlight-2"></div>
+    <!-- Floating Morpho Butterflies & Jungle Ambient -->
+    <div class="butterfly butterfly-1">🦋</div>
+    <div class="butterfly butterfly-2">🦋</div>
+    <div class="butterfly butterfly-3">🦋</div>
+  </div>
+
+  <!-- Header / Entrance (Jungle Museum Hero) -->
+  <header class="museum-header">
+    <div class="hero-jungle-backdrop">
+      <img src="images/jungle-bg.jpg" alt="野生のゴリラ、ヒョウ、オウム、オオハシが息づく木漏れ日の森のジャングル美術館" class="hero-jungle-img">
+      <div class="hero-sunbeam-overlay"></div>
+      <div class="hero-overlay"></div>
+    </div>
+    
+    <div class="header-container">
+      <!-- Massive Stylized Angled Stamp Logo -->
+      <div class="hero-stamp-showcase">
+        <div class="mega-hanko-wrapper">
+          <img src="images/hanko.svg" alt="＠ゴリーダー 落款印" class="mega-hanko-logo" width="170" height="170">
+        </div>
+      </div>
+
+      <div class="brand-text-center">
+        <span class="museum-sub">✨ 太陽の木漏れ日と野生の動物たちが息づく美術館 ✨</span>
+        <h1 class="museum-title">＠ゴリーダー元素</h1>
+      </div>
+      
+      <p class="header-tagline">
+        黄金の光が差し込む熱帯雨林の奥、ゴリラ・ヒョウ・熱帯鳥が見守る神秘の美術館。<br>
+        リーダーの哀愁・本音・人間味が、野生の言霊として静かに響く場所。
+      </p>
+    </div>
+  </header>
+
+  <!-- Gallery Main Hall -->
+  <main class="gallery-container">
+    <div class="gallery-header">
+      <div class="room-indicator">
+        <span class="room-tag"><i class="fa-solid fa-paw"></i> 野生の回廊・第一室</span>
+        <h2 class="room-title">言霊（ことだま）コレクション</h2>
+      </div>
+      <p class="gallery-hint"><i class="fa-solid fa-hand-pointer"></i> カードをタップすると裏返り、＠ゴリーダーの【プチ解説】が読めます</p>
+    </div>
+
+    <!-- Art Cards Grid -->
+    <div class="art-grid" id="artGrid">
+
+      <!-- Card 001 -->
+      <article class="art-card" data-id="001">
+        <div class="card-inner">
+          <!-- FRONT SIDE (Art Display) -->
+          <div class="card-front">
+            <div class="card-frame">
+              <div class="art-header">
+                <span class="art-number">No.001</span>
+                <span class="art-category">🐆 哀愁のヒョウ</span>
+              </div>
+              <div class="art-canvas botanical-card-bg">
+                <div class="botanical-watermark"></div>
+                <div class="calligraphy-wrapper">
+                  <p class="calligraphy-line">上司との会話の間が苦しくて、</p>
+                  <p class="calligraphy-line">毛嫌いしていたタバコに手を出す、</p>
+                  <p class="calligraphy-line highlight-line">22歳入社2ヶ月な私</p>
+                </div>
+                <div class="art-signature">
+                  <img src="images/hanko.svg" alt="＠ゴリーダー印" class="art-hanko">
+                </div>
+              </div>
+              <div class="card-footer-front">
+                <span class="flip-prompt"><i class="fa-solid fa-rotate"></i> タップして解説を読む</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- BACK SIDE (Commentary & Reactions) -->
+          <div class="card-back">
+            <div class="back-frame">
+              <div class="back-header">
+                <div class="back-badge"><i class="fa-solid fa-feather-pointed"></i> ＠ゴリーダーのプチ解説</div>
+                <span class="back-close-btn" title="表面に戻す"><i class="fa-solid fa-rotate-left"></i></span>
+              </div>
+              
+              <div class="commentary-box">
+                <p class="commentary-body">
+                  沈黙が怖くて、何か間を埋める武器が欲しかったあの頃。煙の向こうに大人の余裕を探していたけれど、本当に欲しかったのはタバコじゃなくて、上司と対等に話せる度胸と居場所やったんやなぁ。
+                </p>
+              </div>
+
+              <!-- Facebook-style Authentic Reaction Bar -->
+              <div class="fb-interaction-wrapper">
+                <!-- Top Summary Row: Total Count & Stacked Icons (Just like Facebook) -->
+                <div class="fb-summary-row">
+                  <div class="fb-icon-stack" id="stack-001">
+                    <span class="fb-mini-icon" style="background:#1877f2; color:#fff;" title="わかるわ～">👍</span>
+                    <span class="fb-mini-icon" style="background:#e52d27; color:#fff;" title="それな">🎯</span>
+                    <span class="fb-mini-icon" style="background:#f7b125; color:#fff;" title="おもろ">😆</span>
+                  </div>
+                  <span class="fb-total-count" id="total-count-001">44</span>
+                </div>
+
+                <!-- Bottom Action Row: Hover/Long-press Reaction Button -->
+                <div class="fb-action-row">
+                  <!-- The Reaction Trigger & Dock Container -->
+                  <div class="fb-react-container" data-card-id="001">
+                    <!-- Floating Reaction Dock (Reveals on Hover) -->
+                    <div class="fb-reactions-dock">
+                      <button class="dock-item" data-type="wakaru" data-emoji="👍" data-label="わかるわ～" type="button">
+                        <span class="dock-tooltip">わかるわ～</span>
+                        <span class="dock-emoji">👍</span>
+                      </button>
+                      <button class="dock-item" data-type="omoro" data-emoji="😆" data-label="おもろ" type="button">
+                        <span class="dock-tooltip">おもろ</span>
+                        <span class="dock-emoji">😆</span>
+                      </button>
+                      <button class="dock-item" data-type="majide" data-emoji="😲" data-label="マジで" type="button">
+                        <span class="dock-tooltip">マジで</span>
+                        <span class="dock-emoji">😲</span>
+                      </button>
+                      <button class="dock-item" data-type="sorena" data-emoji="🎯" data-label="それな" type="button">
+                        <span class="dock-tooltip">それな</span>
+                        <span class="dock-emoji">🎯</span>
+                      </button>
+                      <button class="dock-item" data-type="hee" data-emoji="💡" data-label="へぇ～" type="button">
+                        <span class="dock-tooltip">へぇ～</span>
+                        <span class="dock-emoji">💡</span>
+                      </button>
+                      <button class="dock-item" data-type="ahona" data-emoji="🤣" data-label="んなアホな" type="button">
+                        <span class="dock-tooltip">んなアホな</span>
+                        <span class="dock-emoji">🤣</span>
+                      </button>
+                    </div>
+
+                    <!-- Main Like Button (Changes emoji & text when selected) -->
+                    <button class="fb-main-btn" type="button">
+                      <span class="main-btn-emoji">👍</span>
+                      <span class="main-btn-text">いいね（共感）</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="back-footer">
+                <span class="flip-back-prompt"><i class="fa-solid fa-rotate-left"></i> タップして作品に戻る</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card 002 -->
+      <article class="art-card" data-id="002">
+        <div class="card-inner">
+          <!-- FRONT SIDE -->
+          <div class="card-front">
+            <div class="card-frame">
+              <div class="art-header">
+                <span class="art-number">No.002</span>
+                <span class="art-category">🦍 覚醒のゴリラ</span>
+              </div>
+              <div class="art-canvas botanical-card-bg">
+                <div class="botanical-watermark"></div>
+                <div class="calligraphy-wrapper">
+                  <p class="calligraphy-line">話が通じひん人とちゃうで。</p>
+                  <p class="calligraphy-line">反論するためだけに</p>
+                  <p class="calligraphy-line highlight-line">相手の話を聞いてた人やで</p>
+                </div>
+                <div class="art-signature">
+                  <img src="images/hanko.svg" alt="＠ゴリーダー印" class="art-hanko">
+                </div>
+              </div>
+              <div class="card-footer-front">
+                <span class="flip-prompt"><i class="fa-solid fa-rotate"></i> タップして解説を読む</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- BACK SIDE -->
+          <div class="card-back">
+            <div class="back-frame">
+              <div class="back-header">
+                <div class="back-badge"><i class="fa-solid fa-feather-pointed"></i> ＠ゴリーダーのプチ解説</div>
+                <span class="back-close-btn" title="表面に戻す"><i class="fa-solid fa-rotate-left"></i></span>
+              </div>
+              
+              <div class="commentary-box">
+                <p class="commentary-body">
+                  会話してるフリして、頭の中では次のカウンターパンチを構えてるだけ。聞く気配ゼロの「うんうん」ほど怖いもんはない。相手を論破しても勝負に勝って信頼落とす、典型的なリーダーの落とし穴やで。
+                </p>
+              </div>
+
+              <!-- Facebook-style Authentic Reaction Bar -->
+              <div class="fb-interaction-wrapper">
+                <!-- Top Summary Row: Total Count & Stacked Icons -->
+                <div class="fb-summary-row">
+                  <div class="fb-icon-stack" id="stack-002">
+                    <span class="fb-mini-icon" style="background:#e52d27; color:#fff;" title="それな">🎯</span>
+                    <span class="fb-mini-icon" style="background:#1877f2; color:#fff;" title="わかるわ～">👍</span>
+                    <span class="fb-mini-icon" style="background:#f7b125; color:#fff;" title="おもろ">😆</span>
+                  </div>
+                  <span class="fb-total-count" id="total-count-002">102</span>
+                </div>
+
+                <!-- Bottom Action Row: Hover/Long-press Reaction Button -->
+                <div class="fb-action-row">
+                  <div class="fb-react-container" data-card-id="002">
+                    <!-- Floating Reaction Dock -->
+                    <div class="fb-reactions-dock">
+                      <button class="dock-item" data-type="wakaru" data-emoji="👍" data-label="わかるわ～" type="button">
+                        <span class="dock-tooltip">わかるわ～</span>
+                        <span class="dock-emoji">👍</span>
+                      </button>
+                      <button class="dock-item" data-type="omoro" data-emoji="😆" data-label="おもろ" type="button">
+                        <span class="dock-tooltip">おもろ</span>
+                        <span class="dock-emoji">😆</span>
+                      </button>
+                      <button class="dock-item" data-type="majide" data-emoji="😲" data-label="マジで" type="button">
+                        <span class="dock-tooltip">マジで</span>
+                        <span class="dock-emoji">😲</span>
+                      </button>
+                      <button class="dock-item" data-type="sorena" data-emoji="🎯" data-label="それな" type="button">
+                        <span class="dock-tooltip">それな</span>
+                        <span class="dock-emoji">🎯</span>
+                      </button>
+                      <button class="dock-item" data-type="hee" data-emoji="💡" data-label="へぇ～" type="button">
+                        <span class="dock-tooltip">へぇ～</span>
+                        <span class="dock-emoji">💡</span>
+                      </button>
+                      <button class="dock-item" data-type="ahona" data-emoji="🤣" data-label="んなアホな" type="button">
+                        <span class="dock-tooltip">んなアホな</span>
+                        <span class="dock-emoji">🤣</span>
+                      </button>
+                    </div>
+
+                    <!-- Main Like Button -->
+                    <button class="fb-main-btn" type="button">
+                      <span class="main-btn-emoji">👍</span>
+                      <span class="main-btn-text">いいね（共感）</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="back-footer">
+                <span class="flip-back-prompt"><i class="fa-solid fa-rotate-left"></i> タップして作品に戻る</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card 003 -->
+      <article class="art-card" data-id="003">
+        <div class="card-inner">
+          <!-- FRONT SIDE -->
+          <div class="card-front">
+            <div class="card-frame">
+              <div class="art-header">
+                <span class="art-number">No.003</span>
+                <span class="art-category">🦜 観察のオオハシ</span>
+              </div>
+              <div class="art-canvas botanical-card-bg">
+                <div class="botanical-watermark"></div>
+                <div class="calligraphy-wrapper">
+                  <p class="calligraphy-line">話すことがないちゅうか、</p>
+                  <p class="calligraphy-line highlight-line">相手に興味がなかったんやろなぁ…</p>
+                </div>
+                <div class="art-signature">
+                  <img src="images/hanko.svg" alt="＠ゴリーダー印" class="art-hanko">
+                </div>
+              </div>
+              <div class="card-footer-front">
+                <span class="flip-prompt"><i class="fa-solid fa-rotate"></i> タップして解説を読む</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- BACK SIDE -->
+          <div class="card-back">
+            <div class="back-frame">
+              <div class="back-header">
+                <div class="back-badge"><i class="fa-solid fa-feather-pointed"></i> ＠ゴリーダーのプチ解説</div>
+                <span class="back-close-btn" title="表面に戻す"><i class="fa-solid fa-rotate-left"></i></span>
+              </div>
+              
+              <div class="commentary-box">
+                <p class="commentary-body">
+                  ネタがない、雑談が苦手と言い訳してたけど、結局のところ相手の世界に関心が向いてへんかっただけ。興味さえ持てば質問は無限に湧いてくる。コミュニケーションの基本はテクニックやなく「好奇心」や。
+                </p>
+              </div>
+
+              <!-- Facebook-style Authentic Reaction Bar -->
+              <div class="fb-interaction-wrapper">
+                <!-- Top Summary Row: Total Count & Stacked Icons -->
+                <div class="fb-summary-row">
+                  <div class="fb-icon-stack" id="stack-003">
+                    <span class="fb-mini-icon" style="background:#e52d27; color:#fff;" title="それな">🎯</span>
+                    <span class="fb-mini-icon" style="background:#1877f2; color:#fff;" title="わかるわ～">👍</span>
+                    <span class="fb-mini-icon" style="background:#f7b125; color:#fff;" title="へぇ～">💡</span>
+                  </div>
+                  <span class="fb-total-count" id="total-count-003">81</span>
+                </div>
+
+                <!-- Bottom Action Row: Hover/Long-press Reaction Button -->
+                <div class="fb-action-row">
+                  <div class="fb-react-container" data-card-id="003">
+                    <!-- Floating Reaction Dock -->
+                    <div class="fb-reactions-dock">
+                      <button class="dock-item" data-type="wakaru" data-emoji="👍" data-label="わかるわ～" type="button">
+                        <span class="dock-tooltip">わかるわ～</span>
+                        <span class="dock-emoji">👍</span>
+                      </button>
+                      <button class="dock-item" data-type="omoro" data-emoji="😆" data-label="おもろ" type="button">
+                        <span class="dock-tooltip">おもろ</span>
+                        <span class="dock-emoji">😆</span>
+                      </button>
+                      <button class="dock-item" data-type="majide" data-emoji="😲" data-label="マジで" type="button">
+                        <span class="dock-tooltip">マジで</span>
+                        <span class="dock-emoji">😲</span>
+                      </button>
+                      <button class="dock-item" data-type="sorena" data-emoji="🎯" data-label="それな" type="button">
+                        <span class="dock-tooltip">それな</span>
+                        <span class="dock-emoji">🎯</span>
+                      </button>
+                      <button class="dock-item" data-type="hee" data-emoji="💡" data-label="へぇ～" type="button">
+                        <span class="dock-tooltip">へぇ～</span>
+                        <span class="dock-emoji">💡</span>
+                      </button>
+                      <button class="dock-item" data-type="ahona" data-emoji="🤣" data-label="んなアホな" type="button">
+                        <span class="dock-tooltip">んなアホな</span>
+                        <span class="dock-emoji">🤣</span>
+                      </button>
+                    </div>
+
+                    <!-- Main Like Button -->
+                    <button class="fb-main-btn" type="button">
+                      <span class="main-btn-emoji">👍</span>
+                      <span class="main-btn-text">いいね（共感）</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="back-footer">
+                <span class="flip-back-prompt"><i class="fa-solid fa-rotate-left"></i> タップして作品に戻る</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </main>
+
+  <!-- Museum Shop / Kindle CTA Section -->
+  <section class="museum-shop-section">
+    <div class="shop-card">
+      <div class="shop-stamp">
+        <img src="images/hanko.svg" alt="＠ゴリーダー印" class="shop-hanko" width="64" height="64">
+      </div>
+      <div class="shop-info">
+        <span class="shop-badge">MUSEUM ARCHIVE</span>
+        <h2 class="shop-title">電子書籍『＠ゴリーダー元素』</h2>
+        <p class="shop-desc">
+          現場で戦うすべての人へ。リーダーの哀愁、葛藤、そしてクスッと笑える本音の言霊を網羅した完全アーカイブ決定版。
+        </p>
+      </div>
+      <div class="shop-action">
+        <!-- Secure link with rel="noopener noreferrer" -->
+        <a href="https://www.amazon.co.jp/" target="_blank" rel="noopener noreferrer" class="kindle-btn">
+          <i class="fa-brands fa-amazon"></i>
+          <span>Kindleで詳しく見る</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Museum Footer -->
+  <footer class="museum-footer">
+    <div class="footer-content">
+      <div class="footer-logo">
+        <img src="images/hanko.svg" alt="＠ゴリーダー" class="footer-hanko" width="32" height="32">
+        <span class="footer-title">＠ゴリーダー元素</span>
+      </div>
+      <p class="footer-copy">© 2026 @ゴリーダー元素 Gallery. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

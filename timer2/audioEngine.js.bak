@@ -1,0 +1,324 @@
+/**
+ * Pure Standalone Web Audio Engine
+ * バックアップ: ジャンル差別化前の保存バージョン
+ */
+
+class AudioEngine {
+  constructor() {
+    this.audioCtx = null;
+    this.currentPhase = 1;
+    this.isPlaying = false;
+    this.loopTimer = null;
+    this.activeNodes = [];
+  }
+
+  init() {
+    if (!this.audioCtx) {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      this.audioCtx = new AudioContextClass();
+    }
+    if (this.audioCtx.state === 'suspended') {
+      try {
+        this.audioCtx.resume();
+      } catch (e) {}
+    }
+  }
+
+  clearBGM() {
+    if (this.loopTimer) {
+      clearInterval(this.loopTimer);
+      this.loopTimer = null;
+    }
+    this.activeNodes.forEach(node => {
+      try {
+        if (node.stop) node.stop();
+        if (node.disconnect) node.disconnect();
+      } catch (e) {}
+    });
+    this.activeNodes = [];
+  }
+
+  startBGM(phase = 1) {
+    this.init();
+
+    if (this.isPlaying && this.currentPhase === phase) return;
+
+    this.clearBGM();
+    this.currentPhase = phase;
+    this.isPlaying = true;
+
+    switch (phase) {
+      case 1:
+        this.playPhase1AcousticCafe();
+        break;
+      case 2:
+        this.playPhase2RainyLoFiJazz();
+        break;
+      case 3:
+        this.playPhase3DeepImmersionPiano();
+        break;
+      default:
+        this.playPhase1AcousticCafe();
+        break;
+    }
+  }
+
+  playPhase1AcousticCafe() {
+    this.startBackgroundNoise(450, 0.025);
+
+    const chordProgression = [
+      [164.81, 207.65, 246.94, 311.13, 370.00],
+      [207.65, 246.94, 311.13, 370.00, 493.88],
+      [138.59, 164.81, 207.65, 246.94, 329.63],
+      [146.83, 174.61, 220.00, 261.63, 329.63],
+      [123.47, 155.56, 185.00, 220.00, 293.66],
+      [207.65, 246.94, 293.66, 370.00, 440.00],
+      [138.59, 174.61, 207.65, 246.94, 329.63],
+      [146.83, 174.61, 220.00, 261.63, 370.00]
+    ];
+
+    const melodyNotes = [329.63, 370.00, 392.00, 440.00, 493.88, 554.37, 659.25, 740.00];
+
+    let chordIdx = 0;
+    const playStep = () => {
+      if (!this.isPlaying || this.currentPhase !== 1) return;
+      this.init();
+
+      const chord = chordProgression[chordIdx % chordProgression.length];
+      chordIdx++;
+
+      chord.forEach((freq, idx) => {
+        const humanDelay = idx * 260 + (Math.random() * 30 - 15);
+        const humanVolume = 0.045 + (Math.random() * 0.02 - 0.01);
+        
+        setTimeout(() => {
+          if (!this.isPlaying || this.currentPhase !== 1) return;
+          this.triggerWarmTone(freq, 'triangle', 2.8, humanVolume);
+        }, Math.max(0, humanDelay));
+      });
+
+      if (Math.random() > 0.35) {
+        const randomNote = melodyNotes[Math.floor(Math.random() * melodyNotes.length)];
+        const melodyDelay = 1200 + Math.random() * 800;
+        setTimeout(() => {
+          if (!this.isPlaying || this.currentPhase !== 1) return;
+          this.triggerWarmTone(randomNote, 'sine', 2.2, 0.035);
+        }, melodyDelay);
+      }
+    };
+
+    playStep();
+    this.loopTimer = setInterval(playStep, 3800);
+  }
+
+  playPhase2RainyLoFiJazz() {
+    this.startBackgroundNoise(650, 0.035);
+
+    const chordProgression = [
+      [174.61, 220.00, 261.63, 329.63, 392.00],
+      [146.83, 174.61, 220.00, 261.63, 329.63],
+      [196.00, 233.08, 293.66, 349.23, 440.00],
+      [130.81, 164.81, 196.00, 233.08, 349.23],
+      [220.00, 261.63, 329.63, 392.00, 440.00],
+      [146.83, 185.00, 220.00, 261.63, 349.23],
+      [196.00, 233.08, 293.66, 349.23, 440.00],
+      [130.81, 164.81, 207.65, 233.08, 329.63]
+    ];
+
+    const melodyNotes = [349.23, 392.00, 440.00, 523.25, 587.33, 659.25];
+
+    let chordIdx = 0;
+    const playStep = () => {
+      if (!this.isPlaying || this.currentPhase !== 2) return;
+      this.init();
+
+      const chord = chordProgression[chordIdx % chordProgression.length];
+      chordIdx++;
+
+      chord.forEach((freq, idx) => {
+        const humanDelay = idx * 240 + (Math.random() * 25 - 12);
+        const humanVolume = 0.04 + (Math.random() * 0.015 - 0.007);
+
+        setTimeout(() => {
+          if (!this.isPlaying || this.currentPhase !== 2) return;
+          this.triggerWarmTone(freq, 'sine', 3.0, humanVolume);
+        }, Math.max(0, humanDelay));
+      });
+
+      if (Math.random() > 0.4) {
+        const randomNote = melodyNotes[Math.floor(Math.random() * melodyNotes.length)];
+        const melodyDelay = 1000 + Math.random() * 600;
+        setTimeout(() => {
+          if (!this.isPlaying || this.currentPhase !== 2) return;
+          this.triggerWarmTone(randomNote, 'sine', 2.5, 0.03);
+        }, melodyDelay);
+      }
+    };
+
+    playStep();
+    this.loopTimer = setInterval(playStep, 3500);
+  }
+
+  playPhase3DeepImmersionPiano() {
+    this.startBackgroundNoise(350, 0.025);
+
+    const chordProgression = [
+      [220.00, 261.63, 329.63, 392.00, 493.88],
+      [174.61, 220.00, 261.63, 329.63, 392.00],
+      [196.00, 246.94, 293.66, 392.00, 440.00],
+      [130.81, 164.81, 196.00, 261.63, 329.63]
+    ];
+
+    let chordIdx = 0;
+    const playStep = () => {
+      if (!this.isPlaying || this.currentPhase !== 3) return;
+      this.init();
+
+      const chord = chordProgression[chordIdx % chordProgression.length];
+      chordIdx++;
+
+      chord.forEach((freq, idx) => {
+        const humanDelay = idx * 280 + (Math.random() * 20);
+        setTimeout(() => {
+          if (!this.isPlaying || this.currentPhase !== 3) return;
+          this.triggerWarmTone(freq, 'sine', 3.5, 0.045);
+          if (idx === 0) {
+            this.triggerWarmTone(freq / 2, 'sine', 4.0, 0.03);
+          }
+        }, Math.max(0, humanDelay));
+      });
+    };
+
+    playStep();
+    this.loopTimer = setInterval(playStep, 4000);
+  }
+
+  triggerWarmTone(freq, type, duration, volume) {
+    if (!this.audioCtx) return;
+    if (this.audioCtx.state === 'suspended') {
+      try { this.audioCtx.resume(); } catch(e){}
+    }
+
+    try {
+      const now = this.audioCtx.currentTime;
+      const osc = this.audioCtx.createOscillator();
+      const gain = this.audioCtx.createGain();
+      const filter = this.audioCtx.createBiquadFilter();
+
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, now);
+
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(1100, now);
+
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.linearRampToValueAtTime(volume, now + 0.12);
+      gain.gain.linearRampToValueAtTime(0.0001, now + duration);
+
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(this.audioCtx.destination);
+
+      osc.start(now);
+      osc.stop(now + duration + 0.05);
+    } catch (e) {
+      console.warn('Tone trigger error:', e);
+    }
+  }
+
+  startBackgroundNoise(cutoffFreq, volume) {
+    if (!this.audioCtx) return;
+    if (this.audioCtx.state === 'suspended') {
+      try { this.audioCtx.resume(); } catch(e){}
+    }
+
+    try {
+      const sampleRate = this.audioCtx.sampleRate;
+      const bufferSize = sampleRate * 2;
+      const buffer = this.audioCtx.createBuffer(1, bufferSize, sampleRate);
+      const data = buffer.getChannelData(0);
+
+      let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+      for (let i = 0; i < bufferSize; i++) {
+        const white = Math.random() * 2 - 1;
+        b0 = 0.99886 * b0 + white * 0.0555179;
+        b1 = 0.99332 * b1 + white * 0.0750759;
+        b2 = 0.96900 * b2 + white * 0.1538520;
+        b3 = 0.86650 * b3 + white * 0.3104856;
+        b4 = 0.55000 * b4 + white * 0.5329522;
+        b5 = -0.7616 * b5 - white * 0.0168980;
+        data[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
+        data[i] *= 0.11;
+        b6 = white * 0.115926;
+      }
+
+      const noise = this.audioCtx.createBufferSource();
+      noise.buffer = buffer;
+      noise.loop = true;
+
+      const filter = this.audioCtx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(cutoffFreq, this.audioCtx.currentTime);
+
+      const gain = this.audioCtx.createGain();
+      gain.gain.setValueAtTime(volume, this.audioCtx.currentTime);
+
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(this.audioCtx.destination);
+
+      noise.start();
+      this.activeNodes.push(noise, gain);
+    } catch (e) {
+      console.warn('Noise generation error:', e);
+    }
+  }
+
+  stopBGM() {
+    this.isPlaying = false;
+    this.clearBGM();
+  }
+
+  playClickSound() {
+    if (!this.audioCtx) this.init();
+    if (this.audioCtx && this.audioCtx.state === 'suspended') {
+      try { this.audioCtx.resume(); } catch(e){}
+    }
+    try {
+      const now = this.audioCtx.currentTime;
+      const osc = this.audioCtx.createOscillator();
+      const gain = this.audioCtx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(520, now);
+
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.linearRampToValueAtTime(0.018, now + 0.01);
+      gain.gain.linearRampToValueAtTime(0.0001, now + 0.05);
+
+      osc.connect(gain);
+      gain.connect(this.audioCtx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.06);
+    } catch(e) {}
+  }
+
+  playPhaseSignal() {
+    this.init();
+    [523.25, 659.25, 783.99].forEach((freq, idx) => {
+      setTimeout(() => {
+        this.triggerWarmTone(freq, 'sine', 0.35, 0.04);
+      }, idx * 120);
+    });
+  }
+
+  playFinishBell() {
+    this.init();
+    [130.81, 261.63, 392.00, 523.25].forEach((freq, idx) => {
+      this.triggerWarmTone(freq, 'sine', 3.5, 0.06 / (idx + 1));
+    });
+  }
+}
+
+window.audioEngineBak = AudioEngine;

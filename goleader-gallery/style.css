@@ -1,0 +1,1009 @@
+/* ===================================================
+   『＠ゴリーダー元素』森のジャングル美術館 スタイルシート
+   Theme: Deep Forest Green & Botanical Washi & Red Seal
+   =================================================== */
+
+/* ---------------- CSS Variables ---------------- */
+:root {
+  --bg-deep-forest: #0c1810;
+  --bg-forest-card: #15271d;
+  --bg-washi-paper: #ede5d8;
+  --bg-washi-back: #fcf8f2;
+  --text-primary: #f0f7f2;
+  --text-muted: #95ad9e;
+  --text-dark: #222222;
+  
+  --accent-gold: #d4af37;
+  --accent-gold-light: #f3e5ab;
+  --accent-red: #e5281a;
+  --accent-emerald: #2d8a56;
+
+  --font-serif: 'Shippori Mincho', 'Noto Serif JP', serif;
+  --font-brush: 'Yuji Boku', 'Klee One', 'Shippori Mincho', serif;
+  --font-sans: 'Zen Maru Gothic', 'Noto Sans JP', sans-serif;
+
+  --card-radius: 16px;
+  --transition-smooth: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ---------------- Global Reset ---------------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: var(--bg-deep-forest);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  line-height: 1.7;
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ---------------- Ambient Background & Komorebi ---------------- */
+.jungle-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.jungle-art-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('images/jungle-bg.jpg') center center / cover no-repeat;
+  opacity: 0.12;
+  filter: saturate(1.3) blur(1px);
+}
+
+.komorebi-rays {
+  position: absolute;
+  top: -20%;
+  left: 10%;
+  width: 120%;
+  height: 140%;
+  background: repeating-linear-gradient(
+    115deg,
+    rgba(255, 235, 150, 0.14) 0%,
+    rgba(255, 220, 100, 0.08) 8%,
+    transparent 15%,
+    transparent 22%,
+    rgba(255, 245, 180, 0.18) 30%,
+    transparent 38%,
+    rgba(255, 215, 80, 0.1) 45%,
+    transparent 55%
+  );
+  filter: blur(20px);
+  animation: komorebiShimmer 12s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes komorebiShimmer {
+  0% { opacity: 0.6; transform: translateY(-10px); }
+  50% { opacity: 0.9; transform: translateY(10px); }
+  100% { opacity: 0.7; transform: translateY(-5px); }
+}
+
+.butterfly {
+  position: absolute;
+  font-size: 1.8rem;
+  filter: drop-shadow(0 0 8px rgba(0, 195, 255, 0.8));
+  animation: butterflyFloat 18s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  user-select: none;
+  z-index: 1;
+}
+
+.butterfly-1 { top: 25%; left: 8%; animation-duration: 22s; }
+.butterfly-2 { top: 60%; right: 12%; animation-duration: 18s; animation-delay: -6s; font-size: 1.4rem; }
+.butterfly-3 { top: 40%; right: 25%; animation-duration: 26s; animation-delay: -12s; font-size: 1.6rem; }
+
+@keyframes butterflyFloat {
+  0% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(40px, -50px) scale(1.1); }
+  50% { transform: translate(80px, -20px) scale(0.9); }
+  75% { transform: translate(30px, 40px) scale(1.05); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+.spotlight {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.35;
+}
+
+.spotlight-1 {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, #ffd700 0%, #2d8a56 40%, transparent 70%);
+  top: -120px;
+  right: -50px;
+}
+
+.spotlight-2 {
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, #1a4d33 0%, transparent 70%);
+  bottom: -150px;
+  left: -100px;
+}
+
+/* ---------------- Header / Jungle Museum Hero ---------------- */
+.museum-header {
+  position: relative;
+  z-index: 10;
+  padding: 60px 24px 44px;
+  text-align: center;
+  border-bottom: 2px solid rgba(212, 175, 55, 0.35);
+  overflow: hidden;
+}
+
+.hero-jungle-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.hero-jungle-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 25%;
+  filter: brightness(0.65) saturate(1.3) contrast(1.15);
+  transform: scale(1.04);
+}
+
+.hero-sunbeam-overlay {
+  position: absolute;
+  top: -30%;
+  left: 20%;
+  width: 100%;
+  height: 160%;
+  background: radial-gradient(ellipse at 50% 0%, rgba(255, 230, 130, 0.4) 0%, transparent 65%);
+  filter: blur(30px);
+  pointer-events: none;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, 
+    rgba(12, 24, 16, 0.35) 0%, 
+    rgba(12, 24, 16, 0.65) 55%, 
+    rgba(12, 24, 16, 0.95) 100%
+  );
+}
+
+.header-container {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.hero-stamp-showcase {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mega-hanko-wrapper {
+  display: inline-block;
+  transform: rotate(-9deg);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.4s ease;
+  filter: drop-shadow(0 14px 28px rgba(232, 32, 26, 0.55)) drop-shadow(0 0 15px rgba(212, 175, 55, 0.3));
+}
+
+.mega-hanko-wrapper:hover {
+  transform: rotate(-3deg) scale(1.08);
+  filter: drop-shadow(0 20px 38px rgba(232, 32, 26, 0.75)) drop-shadow(0 0 25px rgba(212, 175, 55, 0.5));
+}
+
+.mega-hanko-logo {
+  width: 170px;
+  height: 170px;
+  display: block;
+  user-select: none;
+}
+
+.brand-text-center {
+  margin-bottom: 12px;
+}
+
+.museum-sub {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  letter-spacing: 0.3em;
+  color: var(--accent-gold);
+  font-weight: 800;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+  margin-bottom: 6px;
+}
+
+.museum-title {
+  font-family: var(--font-serif);
+  font-size: 2.8rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  color: #ffffff;
+  text-shadow: 0 4px 18px rgba(0, 0, 0, 0.8), 0 0 30px rgba(45, 138, 86, 0.5);
+}
+
+.header-tagline {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  color: #c7dcd0;
+  max-width: 680px;
+  margin: 0 auto;
+  line-height: 1.9;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+/* ---------------- Gallery Main Container ---------------- */
+.gallery-container {
+  position: relative;
+  z-index: 10;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+
+.gallery-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.room-tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  padding: 4px 14px;
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  color: var(--accent-gold);
+  border-radius: 20px;
+  letter-spacing: 0.15em;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.room-title {
+  font-family: var(--font-serif);
+  font-size: 1.8rem;
+  color: var(--text-primary);
+  letter-spacing: 0.05em;
+}
+
+.gallery-hint {
+  font-size: 0.85rem;
+  color: var(--accent-gold-light);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 6px 18px;
+  border-radius: 30px;
+  border: 1px dashed rgba(212, 175, 55, 0.4);
+  margin-top: 10px;
+}
+
+/* ---------------- Art Grid ---------------- */
+.art-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 36px;
+  justify-content: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Non-hovered dimming in gallery */
+.art-grid:hover .art-card:not(:hover) {
+  opacity: 0.55;
+  filter: brightness(0.4) saturate(0.6);
+}
+
+/* ---------------- Card Container & Robust Flip ---------------- */
+.art-card {
+  min-height: 500px;
+  height: 100%;
+  cursor: pointer;
+  position: relative;
+  border-radius: var(--card-radius);
+  transition: opacity 0.4s ease, filter 0.4s ease, transform 0.4s ease;
+  filter: brightness(0.65) saturate(0.85);
+}
+
+.art-card:hover {
+  filter: brightness(1.15) saturate(1.15) !important;
+  opacity: 1 !important;
+  transform: translateY(-8px);
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  min-height: 500px;
+  border-radius: var(--card-radius);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.85);
+  transition: transform 0.5s cubic-bezier(0.2, 0.85, 0.32, 1.2), box-shadow 0.4s ease;
+}
+
+.art-card:hover .card-inner {
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(255, 220, 100, 0.4);
+}
+
+/* FLIP ANIMATION CONTROL (100% RELIABLE) */
+.card-front,
+.card-back {
+  width: 100%;
+  min-height: 500px;
+  border-radius: var(--card-radius);
+  box-sizing: border-box;
+}
+
+/* By default, show Front, hide Back */
+.card-front {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-forest-card);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  position: relative;
+}
+
+.card-back {
+  display: none; /* Hide when not flipped */
+  flex-direction: column;
+  background-color: var(--bg-washi-back);
+  color: var(--text-dark);
+  border: 2px solid var(--accent-gold);
+}
+
+/* When flipped, hide Front, show Back with smooth pop */
+.art-card.flipped .card-front {
+  display: none;
+}
+
+.art-card.flipped .card-back {
+  display: flex;
+  animation: flipCardPop 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.art-card.flipped {
+  filter: brightness(1) saturate(1) !important;
+  opacity: 1 !important;
+}
+
+@keyframes flipCardPop {
+  0% { transform: scale(0.9) rotateY(40deg); opacity: 0; }
+  100% { transform: scale(1) rotateY(0deg); opacity: 1; }
+}
+
+/* ---------------- Card Front Styling ---------------- */
+.card-frame {
+  height: 100%;
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  background: linear-gradient(135deg, rgba(21, 39, 29, 0.98), rgba(12, 24, 16, 0.98));
+  border-radius: var(--card-radius);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Interactive Cursor Spotlight */
+.card-frame::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle 260px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(255, 245, 190, 0.35) 0%,
+    rgba(255, 225, 120, 0.15) 40%,
+    transparent 80%
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.art-card:hover .card-frame::after {
+  opacity: 1;
+}
+
+.art-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.art-number {
+  font-family: var(--font-serif);
+  font-size: 0.9rem;
+  color: var(--accent-gold);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.art-category {
+  font-size: 0.78rem;
+  color: var(--accent-gold-light);
+  background: rgba(212, 175, 55, 0.18);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  padding: 3px 12px;
+  border-radius: 12px;
+  font-weight: 700;
+}
+
+.art-canvas {
+  flex: 1;
+  border-radius: 10px;
+  padding: 28px 16px 42px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.15);
+  background: #ede5d8;
+  background-image: 
+    radial-gradient(ellipse at 10% 20%, rgba(45, 138, 86, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 80%, rgba(30, 80, 50, 0.06) 0%, transparent 60%);
+}
+
+.botanical-watermark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(circle at 15% 15%, rgba(45, 138, 86, 0.08) 0%, transparent 40%);
+  pointer-events: none;
+}
+
+.calligraphy-wrapper {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.calligraphy-line {
+  font-family: var(--font-brush);
+  font-size: clamp(1.05rem, 3.2vw, 1.28rem);
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1.6;
+  text-align: center;
+  margin: 0;
+}
+
+.calligraphy-line.highlight-line {
+  font-size: clamp(1.15rem, 3.6vw, 1.42rem);
+  font-weight: 800;
+  color: #0d0d0d;
+}
+
+.art-signature {
+  position: absolute;
+  bottom: 12px;
+  right: 14px;
+  z-index: 3;
+}
+
+.art-hanko {
+  width: 44px;
+  height: 44px;
+  filter: drop-shadow(0 2px 5px rgba(229, 45, 39, 0.35));
+}
+
+.card-footer-front {
+  padding-top: 12px;
+  text-align: center;
+}
+
+.flip-prompt {
+  font-size: 0.82rem;
+  color: var(--accent-gold);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+}
+
+/* ---------------- Card Back (Commentary & Reactions) ---------------- */
+.back-frame {
+  height: 100%;
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 20px;
+  text-align: left;
+  background: #faf7f2;
+  border-radius: calc(var(--card-radius) - 2px);
+  position: relative;
+}
+
+.back-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.15);
+}
+
+.back-badge {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #8b2500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.back-close-btn {
+  color: #777777;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.05);
+  transition: var(--transition-smooth);
+}
+
+.back-close-btn:hover {
+  color: var(--accent-red);
+  background: rgba(229, 45, 39, 0.1);
+}
+
+.commentary-box {
+  background: #ffffff;
+  border-left: 4px solid var(--accent-gold);
+  padding: 14px 16px;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.commentary-body {
+  font-family: var(--font-serif);
+  font-size: 0.92rem;
+  line-height: 1.8;
+  color: #2b2b2b;
+  letter-spacing: 0.02em;
+}
+
+/* ---------------- Facebook-Style Authentic Interaction Bar ---------------- */
+.fb-interaction-wrapper {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Facebook Summary Row (Left: Stacked Icon Badges / Right: Total Count) */
+.fb-summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 6px;
+}
+
+.fb-icon-stack {
+  display: inline-flex;
+  align-items: center;
+}
+
+.fb-mini-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82rem;
+  margin-left: -5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 0 0 1.5px #ffffff;
+  user-select: none;
+  transition: transform 0.2s ease;
+}
+
+.fb-mini-icon:first-child {
+  margin-left: 0;
+  z-index: 4;
+}
+.fb-mini-icon:nth-child(2) { z-index: 3; }
+.fb-mini-icon:nth-child(3) { z-index: 2; }
+.fb-mini-icon:nth-child(4) { z-index: 1; }
+
+.fb-total-count {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #65676b;
+  font-family: var(--font-serif);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.fb-total-count::after {
+  content: '件';
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #888888;
+}
+
+/* Facebook Action Row & Trigger Container */
+.fb-action-row {
+  position: relative;
+}
+
+.fb-react-container {
+  position: relative;
+  width: 100%;
+}
+
+/* Main Like Button (Trigger) */
+.fb-main-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #4b4f56;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.fb-main-btn:hover {
+  background: #f2f3f5;
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.fb-main-btn.active {
+  color: #1877f2;
+  font-weight: 800;
+  background: #e7f3ff;
+  border-color: #1877f2;
+}
+
+.fb-main-btn.active.sorena {
+  color: #e52d27;
+  background: #fde8e8;
+  border-color: #e52d27;
+}
+
+.fb-main-btn.active.omoro,
+.fb-main-btn.active.ahona {
+  color: #d88900;
+  background: #fff6e5;
+  border-color: #d88900;
+}
+
+.main-btn-emoji {
+  font-size: 1.25rem;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.fb-main-btn:hover .main-btn-emoji {
+  transform: scale(1.2);
+}
+
+/* ---------------- FLOATING REACTION DOCK (Facebook Popup) ---------------- */
+.fb-reactions-dock {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  padding: 6px 10px;
+  border-radius: 50px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.06);
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px) scale(0.85);
+  transform-origin: bottom left;
+  transition: opacity 0.22s cubic-bezier(0.2, 0, 0.13, 1.5), 
+              transform 0.25s cubic-bezier(0.2, 0, 0.13, 1.5);
+}
+
+/* Reveal Dock on Hover of Container or when container is open */
+.fb-react-container:hover .fb-reactions-dock,
+.fb-react-container.dock-open .fb-reactions-dock {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+/* Safe hover buffer zone so mouse doesn't leave accidentally */
+.fb-reactions-dock::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  height: 12px;
+}
+
+/* Individual Dock Emoji Item */
+.dock-item {
+  position: relative;
+  background: transparent;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  outline: none;
+  user-select: none;
+  transition: transform 0.2s cubic-bezier(0.2, 0, 0.13, 1.5);
+}
+
+.dock-emoji {
+  font-size: 1.85rem;
+  line-height: 1;
+  display: block;
+  transition: transform 0.2s cubic-bezier(0.2, 0, 0.13, 1.5);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+}
+
+/* Hover Zoom & Jump effect (Facebook style) */
+.dock-item:hover {
+  transform: translateY(-12px) scale(1.45);
+  z-index: 10;
+}
+
+.dock-item:active {
+  transform: translateY(-10px) scale(1.25);
+}
+
+/* Dock Tooltip (関西弁ラベルの吹き出し) */
+.dock-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) scale(0.8);
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(4px);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 4px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.18s ease;
+}
+
+.dock-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 4px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.82) transparent transparent transparent;
+}
+
+.dock-item:hover .dock-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+
+/* Floating Emoji Micro Animation */
+.floating-emoji {
+  position: absolute;
+  pointer-events: none;
+  font-size: 2rem;
+  z-index: 150;
+  animation: fbFlyUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes fbFlyUp {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(0.6);
+  }
+  50% {
+    opacity: 0.95;
+    transform: translate(calc(-50% + (var(--random-x, 0px))), -55px) scale(1.35);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + (var(--random-x, 0px) * 1.5)), -110px) scale(1);
+  }
+}
+
+.back-footer {
+  text-align: center;
+  padding-top: 10px;
+  margin-top: auto;
+}
+
+.flip-back-prompt {
+  font-size: 0.78rem;
+  color: #777777;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+}
+
+/* ---------------- Museum Shop / Kindle CTA ---------------- */
+.museum-shop-section {
+  position: relative;
+  z-index: 10;
+  max-width: 900px;
+  margin: 40px auto 60px;
+  padding: 0 24px;
+}
+
+.shop-card {
+  background: linear-gradient(135deg, #182e21 0%, #102117 100%);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 20px;
+  padding: 36px 32px;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+.shop-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 250px;
+  height: 250px;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.shop-stamp { flex-shrink: 0; }
+.shop-hanko {
+  width: 68px;
+  height: 68px;
+  filter: drop-shadow(0 4px 12px rgba(229, 45, 39, 0.3));
+}
+
+.shop-info { flex: 1; }
+.shop-badge {
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  color: var(--accent-gold);
+  font-weight: 700;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.shop-title {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.shop-desc {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.shop-action { flex-shrink: 0; }
+.kindle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, var(--accent-gold) 0%, #b89726 100%);
+  color: #111111;
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 14px 24px;
+  border-radius: 30px;
+  text-decoration: none;
+  box-shadow: 0 6px 18px rgba(212, 175, 55, 0.3);
+  transition: var(--transition-smooth);
+}
+
+.kindle-btn:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 10px 24px rgba(212, 175, 55, 0.45);
+}
+
+/* ---------------- Museum Footer ---------------- */
+.museum-footer {
+  position: relative;
+  z-index: 10;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 32px 24px;
+  text-align: center;
+  background: rgba(8, 16, 11, 0.8);
+}
+
+.footer-content {
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.footer-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.footer-hanko { width: 26px; height: 26px; }
+.footer-title {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.footer-copy { font-size: 0.75rem; color: var(--text-muted); }
+
+/* ---------------- Mobile Responsive ---------------- */
+@media (max-width: 768px) {
+  .museum-title { font-size: 1.8rem; }
+  .museum-header { padding: 36px 16px 24px; }
+  .mega-hanko-logo { width: 130px; height: 130px; }
+  .gallery-container { padding: 28px 12px; }
+  .art-grid { grid-template-columns: 1fr; max-width: 100%; gap: 24px; }
+  .art-card, .card-inner, .card-front, .card-back, .card-frame, .back-frame { min-height: 480px; }
+  .shop-card { flex-direction: column; text-align: center; padding: 28px 20px; }
+  .shop-action { width: 100%; }
+  .kindle-btn { width: 100%; justify-content: center; }
+}

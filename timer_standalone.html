@@ -1,0 +1,1864 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relaxing Nature Timer | リラックス・オレンジタイマー</title>
+  <meta name="description" content="オレンジ色と自然の温もりに包まれる、心地よい癒やしのタイマーアプリ">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --primary-orange: #ff782e;
+      --primary-light: #ffa463;
+      --primary-dark: #ea580c;
+      --accent-gold: #f59e0b;
+      --accent-leaf: #22c55e;
+      --accent-wood: #78350f;
+      
+      --bg-gradient: radial-gradient(circle at 20% 20%, #fff7ed 0%, #ffedd5 40%, #fed7aa 80%, #ffedd5 100%);
+      --card-bg: rgba(255, 255, 255, 0.72);
+      --card-border: rgba(255, 255, 255, 0.85);
+      --card-shadow: 0 24px 60px -12px rgba(234, 88, 12, 0.18), 0 8px 24px -4px rgba(245, 158, 11, 0.12);
+      
+      --text-main: #431407;
+      --text-sub: #7c2d12;
+      --text-muted: #9a3412;
+      --text-soft: #b45309;
+
+      --pill-bg: rgba(255, 255, 255, 0.65);
+      --pill-border: rgba(255, 237, 213, 0.9);
+      --pill-active-bg: linear-gradient(135deg, #ff782e, #f59e0b);
+      --pill-active-text: #ffffff;
+
+      --gauge-track: rgba(254, 215, 170, 0.45);
+      --gauge-stroke: url(#orange-nature-gradient);
+      --glow-1: rgba(255, 138, 76, 0.28);
+      --glow-2: rgba(251, 191, 36, 0.25);
+      --glow-3: rgba(52, 211, 153, 0.18);
+
+      --btn-primary-bg: linear-gradient(135deg, #ff782e 0%, #ea580c 100%);
+      --btn-primary-shadow: 0 10px 25px -4px rgba(234, 88, 12, 0.45);
+      --btn-secondary-bg: rgba(255, 255, 255, 0.8);
+      --btn-secondary-border: rgba(254, 215, 170, 0.8);
+      --btn-secondary-text: #7c2d12;
+
+      --input-bg: rgba(255, 255, 255, 0.8);
+      --input-border: rgba(254, 215, 170, 0.9);
+      --drawer-bg: rgba(255, 250, 245, 0.96);
+    }
+
+    body.dark-mode {
+      --bg-gradient: radial-gradient(circle at 30% 20%, #2b140b 0%, #1a0c06 50%, #0d0603 100%);
+      --card-bg: rgba(38, 20, 14, 0.75);
+      --card-border: rgba(255, 140, 70, 0.15);
+      --card-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.6), 0 0 30px rgba(234, 88, 12, 0.15);
+
+      --text-main: #ffedd5;
+      --text-sub: #fdba74;
+      --text-muted: #fb923c;
+      --text-soft: #d97706;
+
+      --pill-bg: rgba(255, 255, 255, 0.06);
+      --pill-border: rgba(255, 140, 70, 0.18);
+      --pill-active-bg: linear-gradient(135deg, #ff782e, #f59e0b);
+      --pill-active-text: #ffffff;
+
+      --gauge-track: rgba(255, 255, 255, 0.08);
+      --glow-1: rgba(234, 88, 12, 0.2);
+      --glow-2: rgba(217, 119, 6, 0.15);
+      --glow-3: rgba(16, 185, 129, 0.1);
+
+      --btn-primary-bg: linear-gradient(135deg, #ff782e 0%, #ea580c 100%);
+      --btn-primary-shadow: 0 10px 25px -4px rgba(234, 88, 12, 0.6);
+      --btn-secondary-bg: rgba(255, 255, 255, 0.08);
+      --btn-secondary-border: rgba(255, 140, 70, 0.2);
+      --btn-secondary-text: #fed7aa;
+
+      --input-bg: rgba(0, 0, 0, 0.3);
+      --input-border: rgba(255, 140, 70, 0.25);
+      --drawer-bg: rgba(30, 16, 10, 0.96);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      font-family: 'Outfit', 'Zen Maru Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--text-main);
+      padding: 16px;
+      position: relative;
+      overflow-x: hidden;
+      transition: background 0.6s ease, color 0.4s ease;
+    }
+
+    .ambient-glow {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.8;
+      animation: floatOrb 18s ease-in-out infinite alternate;
+    }
+
+    .glow-1 { width: 420px; height: 420px; background: var(--glow-1); top: -100px; left: -80px; }
+    .glow-2 { width: 380px; height: 380px; background: var(--glow-2); bottom: -60px; right: -60px; animation-delay: -5s; }
+    .glow-3 { width: 320px; height: 320px; background: var(--glow-3); top: 40%; right: 20%; animation-delay: -10s; }
+
+    @keyframes floatOrb {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(40px, 30px) scale(1.1); }
+      100% { transform: translate(-30px, 50px) scale(0.95); }
+    }
+
+    .main-wrapper {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 460px;
+    }
+
+    .timer-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: 36px;
+      padding: 28px 24px;
+      box-shadow: var(--card-shadow);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s ease;
+    }
+
+    .app-header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 6px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-icon {
+      font-size: 1.3rem;
+      color: var(--primary-orange);
+      animation: gentleBreathe 4s ease-in-out infinite;
+    }
+
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      background: linear-gradient(135deg, var(--primary-orange), var(--accent-gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      background: var(--btn-secondary-bg);
+      border: 1px solid var(--btn-secondary-border);
+      color: var(--btn-secondary-text);
+      width: 38px;
+      height: 38px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.25s ease;
+    }
+
+    .icon-btn:hover {
+      transform: translateY(-2px);
+      background: var(--pill-active-bg);
+      color: #fff;
+      border-color: transparent;
+    }
+
+    .mode-nav {
+      display: flex;
+      background: var(--pill-bg);
+      padding: 4px;
+      border-radius: 20px;
+      border: 1px solid var(--pill-border);
+      width: 100%;
+      gap: 4px;
+    }
+
+    .mode-btn {
+      flex: 1;
+      padding: 9px 8px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 0.85rem;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .mode-btn.active {
+      background: var(--pill-active-bg);
+      color: var(--pill-active-text);
+      box-shadow: 0 4px 12px rgba(234, 88, 12, 0.28);
+    }
+
+    .pomo-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(34, 197, 94, 0.15);
+      border: 1px solid rgba(34, 197, 94, 0.35);
+      color: #15803d;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    body.dark-mode .pomo-badge {
+      color: #4ade80;
+      background: rgba(34, 197, 94, 0.2);
+    }
+
+    .pomo-dot {
+      width: 8px;
+      height: 8px;
+      background: #22c55e;
+      border-radius: 50%;
+      animation: pulseDot 2s infinite;
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.3); }
+    }
+
+    .pomo-count {
+      background: rgba(34, 197, 94, 0.25);
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 0.75rem;
+    }
+
+    .timer-visual-area {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px 0;
+    }
+
+    .gauge-container {
+      position: relative;
+      width: 270px;
+      height: 270px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .gauge-svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .gauge-track {
+      fill: none;
+      stroke: var(--gauge-track);
+      stroke-width: 12px;
+    }
+
+    .gauge-bar {
+      fill: none;
+      stroke: var(--gauge-stroke);
+      stroke-width: 12px;
+      stroke-linecap: round;
+      stroke-dasharray: 816.81;
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 0.25s linear;
+      filter: drop-shadow(0 2px 8px rgba(255, 120, 46, 0.45));
+    }
+
+    .timer-card.running .gauge-container {
+      animation: organicPulse 6s ease-in-out infinite;
+    }
+
+    @keyframes organicPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.025); }
+    }
+
+    @keyframes gentleBreathe {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.15); opacity: 1; }
+    }
+
+    .time-inner-content {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .status-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--text-soft);
+      margin-bottom: 2px;
+      text-transform: uppercase;
+    }
+
+    .time-text {
+      font-size: 3.4rem;
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--text-main);
+      letter-spacing: -1px;
+      font-feature-settings: "tnum";
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 2px 10px rgba(255, 120, 46, 0.15);
+    }
+
+    .sub-text {
+      font-size: 0.85rem;
+      color: var(--text-sub);
+      margin-top: 6px;
+      font-weight: 500;
+    }
+
+    .presets-panel {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .preset-pill {
+      padding: 7px 14px;
+      border-radius: 20px;
+      background: var(--pill-bg);
+      border: 1px solid var(--pill-border);
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .preset-pill:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary-orange);
+      color: var(--primary-orange);
+    }
+
+    .preset-pill.active {
+      background: var(--pill-active-bg);
+      color: #ffffff;
+      border-color: transparent;
+      box-shadow: 0 4px 10px rgba(234, 88, 12, 0.25);
+    }
+
+    .custom-time-panel {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: -6px;
+    }
+
+    .input-wrap {
+      display: flex;
+      align-items: center;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 14px;
+      padding: 4px 10px;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .input-wrap input {
+      width: 48px;
+      border: none;
+      background: transparent;
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-align: center;
+      outline: none;
+    }
+
+    .input-wrap input::-webkit-inner-spin-button,
+    .input-wrap input::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .input-wrap .unit {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-soft);
+      margin-left: 2px;
+    }
+
+    .colon {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--text-soft);
+    }
+
+    .apply-btn {
+      background: var(--pill-active-bg);
+      color: #fff;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 10px rgba(234, 88, 12, 0.25);
+    }
+
+    .apply-btn:hover {
+      transform: scale(1.06);
+    }
+
+    .control-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 6px;
+      width: 100%;
+    }
+
+    .ctrl-btn {
+      font-family: inherit;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .ctrl-btn.primary {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--btn-primary-bg);
+      color: #ffffff;
+      font-size: 1.6rem;
+      box-shadow: var(--btn-primary-shadow);
+    }
+
+    .ctrl-btn.primary:hover {
+      transform: scale(1.08);
+    }
+
+    .ctrl-btn.primary:active {
+      transform: scale(0.95);
+    }
+
+    .ctrl-btn.secondary {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--btn-secondary-bg);
+      border: 1px solid var(--btn-secondary-border);
+      color: var(--btn-secondary-text);
+      font-size: 1.15rem;
+    }
+
+    .ctrl-btn.secondary:hover {
+      transform: scale(1.08);
+      background: var(--pill-active-bg);
+      color: #fff;
+      border-color: transparent;
+    }
+
+    .ctrl-btn.secondary:active {
+      transform: scale(0.94);
+    }
+
+    .lap-container {
+      width: 100%;
+      max-height: 140px;
+      overflow-y: auto;
+      background: var(--pill-bg);
+      border: 1px solid var(--pill-border);
+      border-radius: 18px;
+      padding: 10px 14px;
+    }
+
+    .lap-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-soft);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .lap-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .lap-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.4);
+    }
+
+    body.dark-mode .lap-item {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .sound-drawer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: var(--drawer-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-top: 1px solid var(--card-border);
+      border-radius: 32px 32px 0 0;
+      padding: 22px 20px;
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.15);
+      transform: translateY(105%);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      z-index: 10;
+    }
+
+    .sound-drawer.open {
+      transform: translateY(0);
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .drawer-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-sub);
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .setting-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .setting-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-sub);
+    }
+
+    .preview-btn {
+      background: var(--pill-bg);
+      border: 1px solid var(--pill-border);
+      color: var(--primary-orange);
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s ease;
+    }
+
+    .preview-btn:hover {
+      background: var(--primary-orange);
+      color: #fff;
+    }
+
+    .sound-selector-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .sound-chip {
+      padding: 9px 10px;
+      border-radius: 14px;
+      background: var(--pill-bg);
+      border: 1px solid var(--pill-border);
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .sound-chip i {
+      color: var(--primary-orange);
+    }
+
+    .sound-chip.active {
+      background: var(--pill-active-bg);
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 4px 10px rgba(234, 88, 12, 0.2);
+    }
+
+    .sound-chip.active i {
+      color: #fff;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 42px;
+      height: 24px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.15);
+      transition: .3s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    input:checked + .slider {
+      background-color: var(--primary-orange);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(18px);
+    }
+
+    .volume-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: var(--pill-bg);
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid var(--pill-border);
+    }
+
+    .vol-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .vol-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      width: 78px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--text-soft);
+    }
+
+    .vol-item input[type="range"] {
+      flex: 1;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--gauge-track);
+      outline: none;
+      accent-color: var(--primary-orange);
+      cursor: pointer;
+    }
+
+    .vol-val {
+      font-size: 0.75rem;
+      font-weight: 600;
+      width: 32px;
+      text-align: right;
+      color: var(--text-sub);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 480px) {
+      .timer-card {
+        padding: 24px 18px;
+        border-radius: 28px;
+      }
+      .gauge-container {
+        width: 240px;
+        height: 240px;
+      }
+      .time-text {
+        font-size: 2.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Ambient Glow Orbs -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+  <div class="ambient-glow glow-3"></div>
+
+  <div class="main-wrapper">
+    <div class="timer-card">
+      <!-- Header -->
+      <header class="app-header">
+        <div class="brand">
+          <span class="brand-icon"><i class="fa-solid fa-seedling"></i></span>
+          <h1 class="brand-title">CALM TIMER</h1>
+        </div>
+        <div class="header-actions">
+          <button id="theme-toggle-btn" class="icon-btn" title="テーマ切り替え" aria-label="テーマ切り替え">
+            <i class="fa-solid fa-sun"></i>
+          </button>
+          <button id="fullscreen-btn" class="icon-btn" title="全画面表示" aria-label="全画面表示">
+            <i class="fa-solid fa-expand"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Mode Navigation -->
+      <nav class="mode-nav">
+        <button id="mode-timer" class="mode-btn active" data-mode="timer">
+          <i class="fa-regular fa-clock"></i> タイマー
+        </button>
+        <button id="mode-pomodoro" class="mode-btn" data-mode="pomodoro">
+          <i class="fa-solid fa-leaf"></i> ポモドーロ
+        </button>
+        <button id="mode-stopwatch" class="mode-btn" data-mode="stopwatch">
+          <i class="fa-solid fa-stopwatch"></i> ストップウォッチ
+        </button>
+      </nav>
+
+      <!-- Pomodoro Status Badge -->
+      <div id="pomo-status-badge" class="pomo-badge hidden">
+        <span class="pomo-dot"></span>
+        <span id="pomo-badge-text">集中タイム (25分)</span>
+        <span class="pomo-count" id="pomo-cycle-count">#1</span>
+      </div>
+
+      <!-- Main Display & Gauge -->
+      <div class="timer-visual-area">
+        <div class="gauge-container">
+          <svg class="gauge-svg" viewBox="0 0 300 300">
+            <defs>
+              <linearGradient id="orange-nature-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ff782e" />
+                <stop offset="50%" stop-color="#ff9a44" />
+                <stop offset="100%" stop-color="#f59e0b" />
+              </linearGradient>
+            </defs>
+            <circle class="gauge-track" cx="150" cy="150" r="130"></circle>
+            <circle id="gauge-progress" class="gauge-bar" cx="150" cy="150" r="130"></circle>
+          </svg>
+
+          <div class="time-inner-content">
+            <div id="status-label" class="status-label">READY</div>
+            <div id="main-time-display" class="time-text">05:00</div>
+            <div id="sub-time-display" class="sub-text">リラックスして集中</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Preset Buttons -->
+      <div id="presets-panel" class="presets-panel">
+        <button class="preset-pill" data-seconds="60">1分</button>
+        <button class="preset-pill" data-seconds="180">3分</button>
+        <button class="preset-pill active" data-seconds="300">5分</button>
+        <button class="preset-pill" data-seconds="600">10分</button>
+        <button class="preset-pill" data-seconds="900">15分</button>
+        <button class="preset-pill" data-seconds="1500">25分</button>
+      </div>
+
+      <!-- Custom Time Inputs -->
+      <div id="custom-time-panel" class="custom-time-panel">
+        <div class="input-wrap">
+          <input type="number" id="input-minutes" min="0" max="999" value="5" aria-label="分">
+          <span class="unit">分</span>
+        </div>
+        <span class="colon">:</span>
+        <div class="input-wrap">
+          <input type="number" id="input-seconds" min="0" max="59" value="0" aria-label="秒">
+          <span class="unit">秒</span>
+        </div>
+        <button id="apply-custom-btn" class="apply-btn" title="設定を適用">
+          <i class="fa-solid fa-check"></i>
+        </button>
+      </div>
+
+      <!-- Action Controls -->
+      <div class="control-actions">
+        <button id="reset-btn" class="ctrl-btn secondary" title="リセット" aria-label="リセット">
+          <i class="fa-solid fa-rotate-left"></i>
+        </button>
+        
+        <button id="toggle-btn" class="ctrl-btn primary" title="スタート" aria-label="スタート / 一時停止">
+          <i class="fa-solid fa-play" id="toggle-icon"></i>
+        </button>
+
+        <button id="lap-btn" class="ctrl-btn secondary hidden" title="ラップタイム記録" aria-label="ラップ">
+          <i class="fa-solid fa-flag"></i>
+        </button>
+
+        <button id="sound-settings-toggle" class="ctrl-btn secondary" title="癒やし音・BGM設定" aria-label="サウンド設定">
+          <i class="fa-solid fa-volume-high"></i>
+        </button>
+      </div>
+
+      <!-- Laps List for Stopwatch -->
+      <div id="lap-container" class="lap-container hidden">
+        <div class="lap-header">
+          <span>ラップ</span>
+          <span>タイム</span>
+        </div>
+        <ul id="lap-list" class="lap-list"></ul>
+      </div>
+
+      <!-- Sound Settings Drawer -->
+      <div id="sound-settings-drawer" class="sound-drawer">
+        <div class="drawer-header">
+          <span class="drawer-title"><i class="fa-solid fa-music"></i> 癒やしのサウンド設定</span>
+          <button id="drawer-close-btn" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <!-- Alarm Sound Selection -->
+        <div class="setting-group">
+          <label class="setting-label">
+            <span>完了チャイム（やさしい癒やし音）</span>
+            <button id="preview-alarm-btn" class="preview-btn" title="試聴する">
+              <i class="fa-solid fa-play"></i> 試聴
+            </button>
+          </label>
+          <div class="sound-selector-grid">
+            <button class="sound-chip active" data-sound="bowl">
+              <i class="fa-solid fa-bell"></i> シンギングボウル
+            </button>
+            <button class="sound-chip" data-sound="kalimba">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> カリンバ (木琴)
+            </button>
+            <button class="sound-chip" data-sound="chimes">
+              <i class="fa-solid fa-wind"></i> 風鈴・チャイム
+            </button>
+            <button class="sound-chip" data-sound="harp">
+              <i class="fa-solid fa-heart"></i> やわらかなハープ
+            </button>
+          </div>
+        </div>
+
+        <!-- Ambient Nature BGM -->
+        <div class="setting-group">
+          <div class="setting-label">
+            <span>タイマー中の環境音 (アンビエントBGM)</span>
+            <label class="switch">
+              <input type="checkbox" id="ambient-toggle">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="sound-selector-grid" id="ambient-grid">
+            <button class="sound-chip ambient-chip active" data-ambient="forest">
+              <i class="fa-solid fa-tree"></i> 森の小鳥
+            </button>
+            <button class="sound-chip ambient-chip" data-ambient="waves">
+              <i class="fa-solid fa-water"></i> 穏やかな波
+            </button>
+            <button class="sound-chip ambient-chip" data-ambient="rain">
+              <i class="fa-solid fa-cloud-rain"></i> 雨粒・雫
+            </button>
+            <button class="sound-chip ambient-chip" data-ambient="hearth">
+              <i class="fa-solid fa-fire"></i> 薪のパチパチ音
+            </button>
+          </div>
+        </div>
+
+        <!-- Volume Sliders -->
+        <div class="setting-group volume-group">
+          <div class="vol-item">
+            <span class="vol-label"><i class="fa-solid fa-bell"></i> 完了音量</span>
+            <input type="range" id="alarm-vol-slider" min="0" max="100" value="75">
+            <span id="alarm-vol-val" class="vol-val">75%</span>
+          </div>
+          <div class="vol-item">
+            <span class="vol-label"><i class="fa-solid fa-leaf"></i> 環境音量</span>
+            <input type="range" id="ambient-vol-slider" min="0" max="100" value="60">
+            <span id="ambient-vol-val" class="vol-val">60%</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    class NatureAudioEngine {
+      constructor() {
+        this.ctx = null;
+        this.alarmVolume = 0.75;
+        this.ambientVolume = 0.6;
+        this.ambientType = 'forest';
+        this.isAmbientPlaying = false;
+        this.ambientMasterGain = null;
+        this.ambientNodes = [];
+        this.ambientIntervals = [];
+      }
+
+      init() {
+        if (!this.ctx) {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          this.ctx = new AudioCtx();
+        }
+        if (this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+
+      setAlarmVolume(val) {
+        this.alarmVolume = Math.max(0, Math.min(1, val));
+      }
+
+      setAmbientVolume(val) {
+        this.ambientVolume = Math.max(0, Math.min(1, val));
+        if (this.ambientMasterGain && this.ctx) {
+          this.ambientMasterGain.gain.setValueAtTime(this.ambientVolume, this.ctx.currentTime);
+        }
+      }
+
+      playAlarm(type = 'bowl') {
+        this.init();
+        switch (type) {
+          case 'kalimba': this.playKalimba(); break;
+          case 'chimes': this.playChimes(); break;
+          case 'harp': this.playHarp(); break;
+          case 'bowl':
+          default: this.playSingingBowl(); break;
+        }
+      }
+
+      playSingingBowl() {
+        const now = this.ctx.currentTime;
+        const baseFreq = 528;
+        const harmonics = [
+          { freq: baseFreq, gain: 0.6, decay: 4.8 },
+          { freq: baseFreq * 2.01, gain: 0.3, decay: 4.0 },
+          { freq: baseFreq * 3.02, gain: 0.15, decay: 3.0 },
+          { freq: baseFreq * 4.19, gain: 0.08, decay: 2.2 }
+        ];
+
+        harmonics.forEach(h => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(h.freq, now);
+          gain.gain.setValueAtTime(0.001, now);
+          gain.gain.exponentialRampToValueAtTime(h.gain * this.alarmVolume, now + 0.09);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + h.decay);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + h.decay);
+        });
+      }
+
+      playKalimba() {
+        const now = this.ctx.currentTime;
+        const notes = [349.23, 440.00, 523.25, 587.33, 698.46, 880.00];
+
+        notes.forEach((freq, idx) => {
+          const noteTime = now + idx * 0.13;
+          const osc = this.ctx.createOscillator();
+          const osc2 = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          const filter = this.ctx.createBiquadFilter();
+
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(2800, noteTime);
+
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, noteTime);
+
+          osc2.type = 'sine';
+          osc2.frequency.setValueAtTime(freq * 2, noteTime);
+
+          gain.gain.setValueAtTime(0.001, noteTime);
+          gain.gain.exponentialRampToValueAtTime(0.42 * this.alarmVolume, noteTime + 0.015);
+          gain.gain.exponentialRampToValueAtTime(0.0001, noteTime + 1.5);
+
+          osc.connect(filter);
+          osc2.connect(filter);
+          filter.connect(gain);
+          gain.connect(this.ctx.destination);
+
+          osc.start(noteTime);
+          osc2.start(noteTime);
+          osc.stop(noteTime + 1.5);
+          osc2.stop(noteTime + 1.5);
+        });
+      }
+
+      playChimes() {
+        const now = this.ctx.currentTime;
+        const freqs = [1046.50, 1174.66, 1318.51, 1567.98, 1760.00, 2093.00];
+        const delays = [0, 0.08, 0.18, 0.28, 0.44, 0.58];
+
+        delays.forEach((delay, idx) => {
+          const time = now + delay;
+          const freq = freqs[idx % freqs.length];
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, time);
+
+          gain.gain.setValueAtTime(0.001, time);
+          gain.gain.exponentialRampToValueAtTime(0.3 * this.alarmVolume, time + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.0001, time + 2.3);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+
+          osc.start(time);
+          osc.stop(time + 2.3);
+        });
+      }
+
+      playHarp() {
+        const now = this.ctx.currentTime;
+        const freqs = [261.63, 392.00, 493.88, 587.33, 659.25, 783.99, 987.77];
+
+        freqs.forEach((freq, idx) => {
+          const time = now + idx * 0.11;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, time);
+
+          gain.gain.setValueAtTime(0.001, time);
+          gain.gain.exponentialRampToValueAtTime(0.35 * this.alarmVolume, time + 0.025);
+          gain.gain.exponentialRampToValueAtTime(0.0001, time + 2.5);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+
+          osc.start(time);
+          osc.stop(time + 2.5);
+        });
+      }
+
+      startAmbient(type = this.ambientType) {
+        this.init();
+        this.stopAmbient();
+        this.ambientType = type;
+        this.isAmbientPlaying = true;
+
+        this.ambientMasterGain = this.ctx.createGain();
+        this.ambientMasterGain.gain.setValueAtTime(0.001, this.ctx.currentTime);
+        this.ambientMasterGain.gain.exponentialRampToValueAtTime(Math.max(0.01, this.ambientVolume), this.ctx.currentTime + 0.3);
+        this.ambientMasterGain.connect(this.ctx.destination);
+
+        switch (type) {
+          case 'waves': this.buildPureWaves(); break;
+          case 'rain': this.buildPureRainAndDrops(); break;
+          case 'hearth': this.buildPureCampfireCrackles(); break;
+          case 'forest':
+          default: this.buildPureBirdsChorus(); break;
+        }
+      }
+
+      stopAmbient() {
+        if (!this.ctx) return;
+        if (this.ambientMasterGain) {
+          try {
+            const now = this.ctx.currentTime;
+            this.ambientMasterGain.gain.setValueAtTime(this.ambientMasterGain.gain.value, now);
+            this.ambientMasterGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.2);
+          } catch (e) {}
+        }
+
+        this.ambientIntervals.forEach(id => clearInterval(id));
+        this.ambientIntervals = [];
+
+        this.ambientNodes.forEach(node => {
+          try { node.stop(); } catch (e) {}
+          try { node.disconnect(); } catch (e) {}
+        });
+        this.ambientNodes = [];
+        this.isAmbientPlaying = false;
+      }
+
+      // 1. Forest: Pure Crystal Bird Songs (Zero Wind Noise)
+      buildPureBirdsChorus() {
+        const playBirdPhrase = () => {
+          if (!this.isAmbientPlaying || !this.ctx) return;
+          const t = this.ctx.currentTime;
+          const birdChoice = Math.random();
+
+          if (birdChoice < 0.35) {
+            [3100, 2450].forEach((freq, idx) => {
+              const osc = this.ctx.createOscillator();
+              const gain = this.ctx.createGain();
+              const noteT = t + idx * 0.18;
+
+              osc.type = 'sine';
+              osc.frequency.setValueAtTime(freq, noteT);
+              osc.frequency.exponentialRampToValueAtTime(freq * 1.08, noteT + 0.04);
+              osc.frequency.exponentialRampToValueAtTime(freq * 0.96, noteT + 0.14);
+
+              gain.gain.setValueAtTime(0.001, noteT);
+              gain.gain.exponentialRampToValueAtTime(0.24, noteT + 0.02);
+              gain.gain.exponentialRampToValueAtTime(0.0001, noteT + 0.16);
+
+              osc.connect(gain);
+              gain.connect(this.ambientMasterGain);
+              osc.start(noteT);
+              osc.stop(noteT + 0.18);
+            });
+          } else if (birdChoice < 0.7) {
+            for (let i = 0; i < 4; i++) {
+              const osc = this.ctx.createOscillator();
+              const gain = this.ctx.createGain();
+              const noteT = t + i * 0.08;
+              const isLast = i === 3;
+              const f0 = isLast ? 3900 : 3200 + (i % 2) * 250;
+
+              osc.type = 'sine';
+              osc.frequency.setValueAtTime(f0, noteT);
+              if (isLast) osc.frequency.exponentialRampToValueAtTime(4500, noteT + 0.14);
+
+              gain.gain.setValueAtTime(0.001, noteT);
+              gain.gain.exponentialRampToValueAtTime(isLast ? 0.26 : 0.16, noteT + 0.015);
+              gain.gain.exponentialRampToValueAtTime(0.0001, noteT + (isLast ? 0.28 : 0.07));
+
+              osc.connect(gain);
+              gain.connect(this.ambientMasterGain);
+              osc.start(noteT);
+              osc.stop(noteT + (isLast ? 0.3 : 0.08));
+            }
+          } else {
+            [2600, 3100, 3550, 3300].forEach((f, i) => {
+              const osc = this.ctx.createOscillator();
+              const gain = this.ctx.createGain();
+              const noteT = t + i * 0.1;
+
+              osc.type = 'sine';
+              osc.frequency.setValueAtTime(f, noteT);
+              osc.frequency.exponentialRampToValueAtTime(f + 300, noteT + 0.04);
+              osc.frequency.exponentialRampToValueAtTime(f - 100, noteT + 0.09);
+
+              gain.gain.setValueAtTime(0.001, noteT);
+              gain.gain.exponentialRampToValueAtTime(0.2, noteT + 0.02);
+              gain.gain.exponentialRampToValueAtTime(0.0001, noteT + 0.1);
+
+              osc.connect(gain);
+              gain.connect(this.ambientMasterGain);
+              osc.start(noteT);
+              osc.stop(noteT + 0.12);
+            });
+          }
+        };
+
+        setTimeout(playBirdPhrase, 100);
+        setTimeout(playBirdPhrase, 900);
+        const forestTimer = setInterval(() => {
+          playBirdPhrase();
+          if (Math.random() > 0.4) setTimeout(playBirdPhrase, 800 + Math.random() * 600);
+        }, 2400);
+        this.ambientIntervals.push(forestTimer);
+      }
+
+      // 2. Pure Waves: Crisp Shoreline Surf (No Muffled Drone)
+      buildPureWaves() {
+        const wavePeriod = 7.0;
+
+        const playSingleWave = () => {
+          if (!this.isAmbientPlaying || !this.ctx) return;
+          const now = this.ctx.currentTime;
+          const bufSize = this.ctx.sampleRate * 5;
+          const buffer = this.ctx.createBuffer(1, bufSize, this.ctx.sampleRate);
+          const data = buffer.getChannelData(0);
+
+          for (let i = 0; i < bufSize; i++) {
+            data[i] = (Math.random() * 2 - 1) * 0.3;
+          }
+
+          const noise = this.ctx.createBufferSource();
+          noise.buffer = buffer;
+
+          const filter = this.ctx.createBiquadFilter();
+          filter.type = 'bandpass';
+          filter.frequency.setValueAtTime(1400, now);
+          filter.Q.setValueAtTime(0.7, now);
+          filter.frequency.exponentialRampToValueAtTime(2800, now + 2.5);
+          filter.frequency.exponentialRampToValueAtTime(1200, now + 4.8);
+
+          const gain = this.ctx.createGain();
+          gain.gain.setValueAtTime(0.001, now);
+          gain.gain.exponentialRampToValueAtTime(0.35, now + 2.4);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 5.2);
+
+          noise.connect(filter);
+          filter.connect(gain);
+          gain.connect(this.ambientMasterGain);
+
+          noise.start(now);
+          noise.stop(now + 5.4);
+        };
+
+        playSingleWave();
+        const waveTimer = setInterval(() => {
+          playSingleWave();
+        }, wavePeriod * 1000);
+        this.ambientIntervals.push(waveTimer);
+      }
+
+      // 3. Pure Rain: Crystal Droplets (No Muddy Lows)
+      buildPureRainAndDrops() {
+        const playDroplet = () => {
+          if (!this.isAmbientPlaying || !this.ctx) return;
+          const t = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+
+          const startF = 1400 + Math.random() * 1100;
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(startF, t);
+          osc.frequency.exponentialRampToValueAtTime(startF * 0.45, t + 0.035);
+
+          gain.gain.setValueAtTime(0.001, t);
+          gain.gain.exponentialRampToValueAtTime(0.25, t + 0.006);
+          gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.07);
+
+          osc.connect(gain);
+          gain.connect(this.ambientMasterGain);
+
+          osc.start(t);
+          osc.stop(t + 0.08);
+        };
+
+        const playLightPatter = () => {
+          if (!this.isAmbientPlaying || !this.ctx) return;
+          const t = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const filter = this.ctx.createBiquadFilter();
+          const gain = this.ctx.createGain();
+
+          filter.type = 'bandpass';
+          filter.frequency.setValueAtTime(3200 + Math.random() * 1500, t);
+          filter.Q.setValueAtTime(4.0, t);
+
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(800 + Math.random() * 400, t);
+
+          gain.gain.setValueAtTime(0.12, t);
+          gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.025);
+
+          osc.connect(filter);
+          filter.connect(gain);
+          gain.connect(this.ambientMasterGain);
+
+          osc.start(t);
+          osc.stop(t + 0.03);
+        };
+
+        const dropsTimer = setInterval(() => {
+          playDroplet();
+          if (Math.random() > 0.3) setTimeout(playDroplet, 60 + Math.random() * 90);
+          if (Math.random() > 0.4) playLightPatter();
+        }, 180);
+        this.ambientIntervals.push(dropsTimer);
+      }
+
+      // 4. Pure Hearth: Crisp Pops & Snaps (Zero Low Wind)
+      buildPureCampfireCrackles() {
+        const playMiniCrackle = () => {
+          if (!this.isAmbientPlaying || !this.ctx) return;
+          const t = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(400 + Math.random() * 2200, t);
+          gain.gain.setValueAtTime(0.12, t);
+          gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.012);
+
+          osc.connect(gain);
+          gain.connect(this.ambientMasterGain);
+          osc.start(t);
+          osc.stop(t + 0.018);
+        };
+
+        const playDistinctSnap = () => {
+          if (!this.isAmbientPlaying || !this.ctx) return;
+          const t = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const filter = this.ctx.createBiquadFilter();
+          const gain = this.ctx.createGain();
+
+          filter.type = 'bandpass';
+          filter.frequency.setValueAtTime(1600 + Math.random() * 1200, t);
+          filter.Q.setValueAtTime(3.5, t);
+
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(250 + Math.random() * 300, t);
+
+          gain.gain.setValueAtTime(0.32, t);
+          gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.035);
+
+          osc.connect(filter);
+          filter.connect(gain);
+          gain.connect(this.ambientMasterGain);
+
+          osc.start(t);
+          osc.stop(t + 0.04);
+        };
+
+        const crackleTimer = setInterval(() => {
+          playMiniCrackle();
+          if (Math.random() > 0.4) playMiniCrackle();
+          if (Math.random() > 0.7) playMiniCrackle();
+        }, 90);
+        this.ambientIntervals.push(crackleTimer);
+
+        const snapTimer = setInterval(() => {
+          if (Math.random() > 0.3) playDistinctSnap();
+        }, 480);
+        this.ambientIntervals.push(snapTimer);
+      }
+    }
+
+    const audio = new NatureAudioEngine();
+
+    const body = document.body;
+    const timerCard = document.querySelector('.timer-card');
+    const themeToggleBtn = document.getElementById('theme-toggle-btn');
+    const fullscreenBtn = document.getElementById('fullscreen-btn');
+
+    const modeButtons = document.querySelectorAll('.mode-btn');
+    const presetsPanel = document.getElementById('presets-panel');
+    const customTimePanel = document.getElementById('custom-time-panel');
+    const pomoStatusBadge = document.getElementById('pomo-status-badge');
+    const pomoBadgeText = document.getElementById('pomo-badge-text');
+    const pomoCycleCount = document.getElementById('pomo-cycle-count');
+
+    const statusLabel = document.getElementById('status-label');
+    const mainTimeDisplay = document.getElementById('main-time-display');
+    const subTimeDisplay = document.getElementById('sub-time-display');
+    const gaugeProgress = document.getElementById('gauge-progress');
+    const GAUGE_CIRCUMFERENCE = 816.81;
+
+    const presetPills = document.querySelectorAll('.preset-pill');
+    const inputMinutes = document.getElementById('input-minutes');
+    const inputSeconds = document.getElementById('input-seconds');
+    const applyCustomBtn = document.getElementById('apply-custom-btn');
+
+    const toggleBtn = document.getElementById('toggle-btn');
+    const toggleIcon = document.getElementById('toggle-icon');
+    const resetBtn = document.getElementById('reset-btn');
+    const lapBtn = document.getElementById('lap-btn');
+    const lapContainer = document.getElementById('lap-container');
+    const lapList = document.getElementById('lap-list');
+
+    const soundSettingsToggle = document.getElementById('sound-settings-toggle');
+    const soundDrawer = document.getElementById('sound-settings-drawer');
+    const drawerCloseBtn = document.getElementById('drawer-close-btn');
+    const previewAlarmBtn = document.getElementById('preview-alarm-btn');
+    const soundChips = document.querySelectorAll('.sound-chip[data-sound]');
+    const ambientToggle = document.getElementById('ambient-toggle');
+    const ambientChips = document.querySelectorAll('.ambient-chip');
+    const alarmVolSlider = document.getElementById('alarm-vol-slider');
+    const alarmVolVal = document.getElementById('alarm-vol-val');
+    const ambientVolSlider = document.getElementById('ambient-vol-slider');
+    const ambientVolVal = document.getElementById('ambient-vol-val');
+
+    let currentMode = 'timer';
+    let isRunning = false;
+    let timerInterval = null;
+
+    let timerDuration = 300;
+    let timerRemaining = 300;
+
+    let pomodoroPhase = 'work';
+    let pomodoroWorkDuration = 25 * 60;
+    let pomodoroBreakDuration = 5 * 60;
+    let pomodoroCycles = 1;
+
+    let swStartTime = 0;
+    let swElapsedTime = 0;
+    let swLaps = [];
+
+    let selectedAlarmSound = 'bowl';
+    let selectedAmbientSound = 'forest';
+    let ambientEnabled = false;
+
+    function formatTime(seconds) {
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    function formatStopwatchTime(ms) {
+      const totalSec = Math.floor(ms / 1000);
+      const m = Math.floor(totalSec / 60);
+      const s = totalSec % 60;
+      const hundredths = Math.floor((ms % 1000) / 10);
+      return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}.${String(hundredths).padStart(2, '0')}`;
+    }
+
+    function setGaugeProgress(percent) {
+      const offset = GAUGE_CIRCUMFERENCE * (1 - Math.max(0, Math.min(1, percent)));
+      gaugeProgress.style.strokeDashoffset = offset;
+    }
+
+    function updateDisplay() {
+      if (currentMode === 'timer') {
+        mainTimeDisplay.textContent = formatTime(timerRemaining);
+        const fraction = timerDuration > 0 ? timerRemaining / timerDuration : 0;
+        setGaugeProgress(fraction);
+
+        if (isRunning) {
+          statusLabel.textContent = 'RUNNING';
+          subTimeDisplay.textContent = '心地よい集中時間';
+        } else if (timerRemaining === timerDuration) {
+          statusLabel.textContent = 'READY';
+          subTimeDisplay.textContent = 'リラックスして準備';
+        } else {
+          statusLabel.textContent = 'PAUSED';
+          subTimeDisplay.textContent = '一時停止中';
+        }
+      } else if (currentMode === 'pomodoro') {
+        mainTimeDisplay.textContent = formatTime(timerRemaining);
+        const total = pomodoroPhase === 'work' ? pomodoroWorkDuration : pomodoroBreakDuration;
+        const fraction = total > 0 ? timerRemaining / total : 0;
+        setGaugeProgress(fraction);
+
+        pomoCycleCount.textContent = `#${pomodoroCycles}`;
+        if (pomodoroPhase === 'work') {
+          pomoBadgeText.textContent = '集中タイム (25分)';
+          pomoStatusBadge.style.borderColor = 'rgba(234, 88, 12, 0.4)';
+          if (isRunning) {
+            statusLabel.textContent = 'FOCUS';
+            subTimeDisplay.textContent = '深呼吸して作業に没頭';
+          } else {
+            statusLabel.textContent = 'READY';
+            subTimeDisplay.textContent = '集中をスタート';
+          }
+        } else {
+          pomoBadgeText.textContent = 'リラックス休憩 (5分)';
+          pomoStatusBadge.style.borderColor = 'rgba(34, 197, 94, 0.4)';
+          if (isRunning) {
+            statusLabel.textContent = 'REST';
+            subTimeDisplay.textContent = '肩の力を抜いてリフレッシュ';
+          } else {
+            statusLabel.textContent = 'BREAK READY';
+            subTimeDisplay.textContent = '休憩をスタート';
+          }
+        }
+      } else if (currentMode === 'stopwatch') {
+        mainTimeDisplay.textContent = formatStopwatchTime(swElapsedTime);
+        statusLabel.textContent = isRunning ? 'TRACKING' : (swElapsedTime > 0 ? 'PAUSED' : 'STOPWATCH');
+        subTimeDisplay.textContent = `${swLaps.length} ラップ記録`;
+        const secFraction = (swElapsedTime % 60000) / 60000;
+        setGaugeProgress(secFraction);
+      }
+    }
+
+    function startTimer() {
+      if (isRunning) return;
+      isRunning = true;
+      timerCard.classList.add('running');
+      toggleIcon.className = 'fa-solid fa-pause';
+      audio.init();
+
+      if (ambientEnabled) {
+        audio.startAmbient(selectedAmbientSound);
+      }
+
+      if (currentMode === 'timer' || currentMode === 'pomodoro') {
+        let lastTick = performance.now();
+        timerInterval = setInterval(() => {
+          const now = performance.now();
+          const delta = (now - lastTick) / 1000;
+          
+          if (delta >= 1) {
+            const fullSeconds = Math.floor(delta);
+            timerRemaining -= fullSeconds;
+            lastTick = now - (delta % 1) * 1000;
+
+            if (timerRemaining <= 0) {
+              timerRemaining = 0;
+              onTimerComplete();
+            }
+            updateDisplay();
+          }
+        }, 200);
+      } else if (currentMode === 'stopwatch') {
+        swStartTime = performance.now() - swElapsedTime;
+        timerInterval = setInterval(() => {
+          swElapsedTime = performance.now() - swStartTime;
+          updateDisplay();
+        }, 30);
+      }
+      updateDisplay();
+    }
+
+    function pauseTimer() {
+      if (!isRunning) return;
+      isRunning = false;
+      timerCard.classList.remove('running');
+      toggleIcon.className = 'fa-solid fa-play';
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      if (ambientEnabled) {
+        audio.stopAmbient();
+      }
+      updateDisplay();
+    }
+
+    function toggleTimer() {
+      if (isRunning) {
+        pauseTimer();
+      } else {
+        startTimer();
+      }
+    }
+
+    function resetTimer() {
+      pauseTimer();
+      if (currentMode === 'timer') {
+        timerRemaining = timerDuration;
+      } else if (currentMode === 'pomodoro') {
+        pomodoroPhase = 'work';
+        timerDuration = pomodoroWorkDuration;
+        timerRemaining = pomodoroWorkDuration;
+        pomodoroCycles = 1;
+      } else if (currentMode === 'stopwatch') {
+        swElapsedTime = 0;
+        swLaps = [];
+        renderLaps();
+      }
+      updateDisplay();
+    }
+
+    function onTimerComplete() {
+      pauseTimer();
+      audio.playAlarm(selectedAlarmSound);
+
+      if (currentMode === 'pomodoro') {
+        if (pomodoroPhase === 'work') {
+          pomodoroPhase = 'break';
+          timerDuration = pomodoroBreakDuration;
+          timerRemaining = pomodoroBreakDuration;
+          statusLabel.textContent = 'WORK COMPLETE!';
+          subTimeDisplay.textContent = '素晴らしい集中でした！お茶をどうぞ';
+        } else {
+          pomodoroPhase = 'work';
+          pomodoroCycles++;
+          timerDuration = pomodoroWorkDuration;
+          timerRemaining = pomodoroWorkDuration;
+          statusLabel.textContent = 'REST COMPLETE!';
+          subTimeDisplay.textContent = 'リフレッシュ完了！次の集中へ';
+        }
+      } else {
+        statusLabel.textContent = 'TIME UP!';
+        subTimeDisplay.textContent = 'おつかれさまでした ✨';
+      }
+      setGaugeProgress(0);
+    }
+
+    function switchMode(newMode) {
+      if (currentMode === newMode) return;
+      pauseTimer();
+      currentMode = newMode;
+
+      modeButtons.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.mode === newMode);
+      });
+
+      if (newMode === 'timer') {
+        presetsPanel.classList.remove('hidden');
+        customTimePanel.classList.remove('hidden');
+        pomoStatusBadge.classList.add('hidden');
+        lapBtn.classList.add('hidden');
+        lapContainer.classList.add('hidden');
+        timerRemaining = timerDuration;
+      } else if (newMode === 'pomodoro') {
+        presetsPanel.classList.add('hidden');
+        customTimePanel.classList.add('hidden');
+        pomoStatusBadge.classList.remove('hidden');
+        lapBtn.classList.add('hidden');
+        lapContainer.classList.add('hidden');
+        pomodoroPhase = 'work';
+        timerDuration = pomodoroWorkDuration;
+        timerRemaining = pomodoroWorkDuration;
+      } else if (newMode === 'stopwatch') {
+        presetsPanel.classList.add('hidden');
+        customTimePanel.classList.add('hidden');
+        pomoStatusBadge.classList.add('hidden');
+        lapBtn.classList.remove('hidden');
+        lapContainer.classList.remove('hidden');
+      }
+
+      updateDisplay();
+    }
+
+    presetPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        presetPills.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+
+        const secs = parseInt(pill.dataset.seconds, 10);
+        timerDuration = secs;
+        timerRemaining = secs;
+        
+        inputMinutes.value = Math.floor(secs / 60);
+        inputSeconds.value = secs % 60;
+        
+        pauseTimer();
+        updateDisplay();
+      });
+    });
+
+    applyCustomBtn.addEventListener('click', () => {
+      const min = parseInt(inputMinutes.value, 10) || 0;
+      const sec = parseInt(inputSeconds.value, 10) || 0;
+      const total = Math.max(1, min * 60 + sec);
+
+      timerDuration = total;
+      timerRemaining = total;
+      
+      presetPills.forEach(p => {
+        p.classList.toggle('active', parseInt(p.dataset.seconds, 10) === total);
+      });
+
+      pauseTimer();
+      updateDisplay();
+    });
+
+    lapBtn.addEventListener('click', () => {
+      if (currentMode !== 'stopwatch' || swElapsedTime === 0) return;
+      const lapTime = swElapsedTime;
+      swLaps.unshift(lapTime);
+      renderLaps();
+    });
+
+    function renderLaps() {
+      lapList.innerHTML = '';
+      swLaps.forEach((lap, idx) => {
+        const li = document.createElement('li');
+        li.className = 'lap-item';
+        li.innerHTML = `
+          <span>Lap ${swLaps.length - idx}</span>
+          <span>${formatStopwatchTime(lap)}</span>
+        `;
+        lapList.appendChild(li);
+      });
+    }
+
+    soundSettingsToggle.addEventListener('click', () => {
+      audio.init();
+      soundDrawer.classList.toggle('open');
+    });
+
+    drawerCloseBtn.addEventListener('click', () => {
+      soundDrawer.classList.remove('open');
+      if (!isRunning && ambientEnabled) {
+        audio.stopAmbient();
+      }
+    });
+
+    soundChips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        soundChips.forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        selectedAlarmSound = chip.dataset.sound;
+        audio.playAlarm(selectedAlarmSound);
+      });
+    });
+
+    previewAlarmBtn.addEventListener('click', () => {
+      audio.playAlarm(selectedAlarmSound);
+    });
+
+    ambientChips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        ambientChips.forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        selectedAmbientSound = chip.dataset.ambient;
+
+        if (ambientEnabled || soundDrawer.classList.contains('open')) {
+          ambientToggle.checked = true;
+          ambientEnabled = true;
+          audio.startAmbient(selectedAmbientSound);
+        }
+      });
+    });
+
+    ambientToggle.addEventListener('change', (e) => {
+      ambientEnabled = e.target.checked;
+      audio.init();
+      if (ambientEnabled) {
+        audio.startAmbient(selectedAmbientSound);
+      } else {
+        audio.stopAmbient();
+      }
+    });
+
+    alarmVolSlider.addEventListener('input', (e) => {
+      const val = parseInt(e.target.value, 10);
+      alarmVolVal.textContent = `${val}%`;
+      audio.setAlarmVolume(val / 100);
+    });
+
+    ambientVolSlider.addEventListener('input', (e) => {
+      const val = parseInt(e.target.value, 10);
+      ambientVolVal.textContent = `${val}%`;
+      audio.setAmbientVolume(val / 100);
+    });
+
+    themeToggleBtn.addEventListener('click', () => {
+      body.classList.toggle('dark-mode');
+      const isDark = body.classList.contains('dark-mode');
+      themeToggleBtn.innerHTML = isDark ? '<i class="fa-solid fa-moon"></i>' : '<i class="fa-solid fa-sun"></i>';
+    });
+
+    fullscreenBtn.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+        fullscreenBtn.innerHTML = '<i class="fa-solid fa-compress"></i>';
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+          fullscreenBtn.innerHTML = '<i class="fa-solid fa-expand"></i>';
+        }
+      }
+    });
+
+    modeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        switchMode(btn.dataset.mode);
+      });
+    });
+
+    toggleBtn.addEventListener('click', toggleTimer);
+    resetBtn.addEventListener('click', resetTimer);
+
+    updateDisplay();
+  </script>
+</body>
+</html>

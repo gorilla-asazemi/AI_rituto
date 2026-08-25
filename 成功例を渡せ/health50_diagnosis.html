@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>50歳からの『健康・体力OS』診断｜気合では乗り切れない身体の現在地</title>
+  <style>
+    :root {
+      --primary: #047857;
+      --primary-dark: #064e3b;
+      --primary-light: #ecfdf5;
+      --accent: #b45309;
+      --text-main: #1f2937;
+      --text-muted: #64748b;
+      --bg-base: #f8fafc;
+      --card-bg: #ffffff;
+      --border-color: #cbd5e1;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.06), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Sans", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      line-height: 1.7;
+      padding: 24px 16px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .app-container {
+      max-width: 680px;
+      width: 100%;
+      background: var(--card-bg);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 36px 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (max-width: 480px) {
+      .app-container {
+        padding: 24px 18px;
+        border-radius: 16px;
+      }
+    }
+
+    .screen {
+      display: none;
+      animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .tag-badge {
+      display: inline-block;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+
+    .main-title {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--primary-dark);
+      line-height: 1.4;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .lead-desc {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      text-align: left;
+    }
+
+    .start-intro {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 24px;
+      font-size: 0.9rem;
+    }
+    .start-intro ul {
+      margin-left: 20px;
+      margin-top: 8px;
+    }
+
+    /* プログレスバー */
+    .progress-container {
+      margin-bottom: 24px;
+    }
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .progress-info .curr-q {
+      color: var(--primary);
+      font-size: 1.05rem;
+    }
+    .progress-track {
+      background-color: #e2e8f0;
+      height: 10px;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #10b981, var(--primary));
+      width: 0%;
+      transition: width 0.25s ease-out;
+      border-radius: 6px;
+    }
+
+    /* 質問カード */
+    .question-card {
+      background: #f8fafc;
+      border: 2px solid var(--primary-light);
+      border-radius: 16px;
+      padding: 32px 20px;
+      min-height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 28px;
+      line-height: 1.55;
+    }
+
+    /* 回答ボタン */
+    .answer-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .btn-choice {
+      width: 100%;
+      padding: 16px 20px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border: none;
+      outline: none;
+    }
+    .btn-yes {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(4, 120, 87, 0.25);
+    }
+    .btn-yes:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+    .btn-no {
+      background: #ffffff;
+      color: #475569;
+      border: 2px solid #cbd5e1;
+    }
+    .btn-no:hover {
+      background: #f8fafc;
+      border-color: #94a3b8;
+      transform: translateY(-2px);
+    }
+    .btn-back {
+      margin-top: 14px;
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-decoration: underline;
+      display: inline-block;
+      text-align: center;
+      width: 100%;
+    }
+    .btn-back:hover {
+      color: #64748b;
+    }
+
+    /* 結果画面 */
+    .result-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .result-type-name {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: var(--primary-dark);
+      margin: 8px 0;
+    }
+    .result-subcatch {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    /* スコアグラフ */
+    .score-board {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 28px;
+    }
+    .score-board-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      text-align: center;
+    }
+    .score-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 0.88rem;
+    }
+    .score-label {
+      width: 190px;
+      font-weight: 600;
+    }
+    .score-bar-bg {
+      flex: 1;
+      height: 12px;
+      background: #e2e8f0;
+      border-radius: 6px;
+      overflow: hidden;
+      margin: 0 10px;
+    }
+    .score-bar-val {
+      height: 100%;
+      border-radius: 6px;
+      width: 0%;
+      transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .score-num {
+      width: 65px;
+      text-align: right;
+      font-weight: 700;
+    }
+
+    /* 診断カード（高評価・注意・課題） */
+    .card-good {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-left: 6px solid #10b981;
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+    .card-good h4 {
+      color: #065f46;
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-borderline {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-left: 6px solid #f59e0b;
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+    .card-borderline h4 {
+      color: #92400e;
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-warning {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-left: 6px solid #ef4444;
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+    .card-warning h4 {
+      color: #991b1b;
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-desc {
+      font-size: 0.92rem;
+      color: #334155;
+      line-height: 1.65;
+    }
+    .card-action {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed #cbd5e1;
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    /* CTAセクション */
+    .cta-area {
+      background: linear-gradient(135deg, var(--primary-light), #f8fafc);
+      border: 2px solid #a7f3d0;
+      border-radius: 16px;
+      padding: 24px 20px;
+      text-align: center;
+      margin-top: 32px;
+    }
+    .cta-area h3 {
+      font-size: 1.15rem;
+      color: var(--primary-dark);
+      margin-bottom: 8px;
+    }
+    .cta-area p {
+      font-size: 0.88rem;
+      color: #334155;
+      margin-bottom: 16px;
+    }
+    .btn-cta {
+      display: inline-block;
+      width: 100%;
+      max-width: 320px;
+      background: var(--primary);
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 14px 20px;
+      border-radius: 10px;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(4, 120, 87, 0.25);
+      transition: background 0.2s;
+    }
+    .btn-cta:hover {
+      background: var(--primary-dark);
+    }
+    .btn-restart {
+      margin-top: 12px;
+      background: transparent;
+      border: none;
+      color: #64748b;
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+
+  <!-- 1. スタート画面 -->
+  <div id="screen-start" class="screen active">
+    <div style="text-align:center;">
+      <span class="tag-badge">全20問 / 所要時間 約1分半</span>
+      <h1 class="main-title">【50歳からの『健康・体力OS』診断】<br>気合では乗り切れない身体の現在地</h1>
+    </div>
+    
+    <p class="lead-desc" style="text-align:center;">
+      夜更かし、ショート動画巡回、運動不足、不調の放置……。<br>
+      50代の身体の現在地をチェックし、<strong>無理のない持続可能な生活OS</strong>へ更新しましょう。
+    </p>
+
+    <div class="start-intro">
+      <strong>診断の進め方</strong>
+      <ul>
+        <li>20個の質問に「◯（当てはまる）」か「✕（当てはまらない）」でお答えください。</li>
+        <li>4つの項目（生活リズム、健康知識、メンタル余白、運動習慣）ごとに判定します。</li>
+        <li>◯が少ない項目ほど「高評価（良好）」、多い項目ほど「見直しのヒント」が表示されます。</li>
+      </ul>
+    </div>
+
+    <button class="btn-choice btn-yes" onclick="startQuiz()">
+      診断をスタートする（無料）
+    </button>
+  </div>
+
+  <!-- 2. 設問画面 -->
+  <div id="screen-quiz" class="screen">
+    <div class="progress-container">
+      <div class="progress-info">
+        <span>診断中：<span id="group-name">グループA</span></span>
+        <span><span class="curr-q" id="q-current">1</span> / <span id="q-total">20</span></span>
+      </div>
+      <div class="progress-track">
+        <div id="progress-bar" class="progress-fill"></div>
+      </div>
+    </div>
+
+    <div id="question-text" class="question-card">
+      質問文がここに入ります
+    </div>
+
+    <div class="answer-actions">
+      <button class="btn-choice btn-yes" onclick="handleAnswer(1)">
+        ◯&nbsp;&nbsp;当てはまる
+      </button>
+      <button class="btn-choice btn-no" onclick="handleAnswer(0)">
+        ✕&nbsp;&nbsp;当てはまらない
+      </button>
+    </div>
+
+    <button id="btn-back" class="btn-back" onclick="handleBack()">← 前の質問に戻る</button>
+  </div>
+
+  <!-- 3. 結果画面 -->
+  <div id="screen-result" class="screen">
+    <div class="result-header">
+      <span class="tag-badge">あなたの診断結果</span>
+      <div id="res-type-title" class="result-type-name">判定中</div>
+      <div id="res-type-sub" class="result-subcatch"></div>
+    </div>
+
+    <!-- スコア内訳グラフ -->
+    <div class="score-board">
+      <div class="score-board-title">📊 項目別スコア内訳（各5問中・◯の数）</div>
+      
+      <div class="score-item">
+        <div class="score-label">A. 生活リズム・悪習慣</div>
+        <div class="score-bar-bg"><div id="bar-a" class="score-bar-val"></div></div>
+        <div class="score-num" id="score-a">0 / 5</div>
+      </div>
+      <div class="score-item">
+        <div class="score-label">B. 健康知識とアプローチ</div>
+        <div class="score-bar-bg"><div id="bar-b" class="score-bar-val"></div></div>
+        <div class="score-num" id="score-b">0 / 5</div>
+      </div>
+      <div class="score-item">
+        <div class="score-label">C. メンタルと一人の余白</div>
+        <div class="score-bar-bg"><div id="bar-c" class="score-bar-val"></div></div>
+        <div class="score-num" id="score-c">0 / 5</div>
+      </div>
+      <div class="score-item">
+        <div class="score-label">D. 運動習慣と活動量</div>
+        <div class="score-bar-bg"><div id="bar-d" class="score-bar-val"></div></div>
+        <div class="score-num" id="score-d">0 / 5</div>
+      </div>
+      <div style="font-size:0.75rem; color:#64748b; text-align:right; margin-top:4px;">
+        ※ 0〜2個：🟢良好 / 3個：🟡注意 / 4〜5個：🔴課題
+      </div>
+    </div>
+
+    <!-- 4項目すべての詳細診断カード -->
+    <h3 style="font-size:1.1rem; color:var(--primary-dark); margin-bottom:14px;">📝 各項目の診断結果とアドバイス</h3>
+    <div id="category-cards-container"></div>
+
+    <!-- CTAセクション -->
+    <div class="cta-area">
+      <h3>📖 50代の「生活リズム・思考・朝の余白」の整え方</h3>
+      <p>
+        気合や根性で走る人生から、自分のペースで人生を再起動する生き方へ。<br>
+        50代のリアルな失敗と実験から生まれた「マイペース朝活術」をKindleで公開しています。
+      </p>
+      <a href="https://amzn.to/3XoU4UT" target="_blank" class="btn-cta">
+        俺の朝活で人生をアップデート（Kindle著書を見る）
+      </a>
+      <br>
+      <button class="btn-restart" onclick="restartQuiz()">もう一度診断する</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // 全20問データ（改訂版・各5問）
+  const quizData = [
+    // グループA (Q1-Q5)
+    { type: 'A', group: 'Aの質問（生活リズムと悪習慣）', text: '完全な夜型生活になっており、寝る時間が深夜や不規則になりがちだ' },
+    { type: 'A', group: 'Aの質問（生活リズムと悪習慣）', text: '疲労やだるさを感じても、「病院に行くほどじゃない」とそのまま放置していることが多い' },
+    { type: 'A', group: 'Aの質問（生活リズムと悪習慣）', text: '不健康だと頭では分かっているのに、タバコや暴飲暴食などの悪習慣がやめられない' },
+    { type: 'A', group: 'Aの質問（生活リズムと悪習慣）', text: '身体の節々の痛みや不調を、「年のせいだから仕方ない」と放置している' },
+    { type: 'A', group: 'Aの質問（生活リズムと悪習慣）', text: 'YouTubeやショート動画を見始めると止まらず、気づけば1〜2時間経っている日が週に2〜3日ある' },
+
+    // グループB (Q6-Q10)
+    { type: 'B', group: 'Bの質問（健康へのアプローチ）', text: 'テレビやネットで話題になった健康法やサプリをつい試したくなる' },
+    { type: 'B', group: 'Bの質問（健康へのアプローチ）', text: '買っただけで使わなくなった健康器具や筋トレグッズが家にある' },
+    { type: 'B', group: 'Bの質問（健康へのアプローチ）', text: '健康的な生活をしようと気合を入れて目標を立て、3日坊主で終わることが何度もある' },
+    { type: 'B', group: 'Bの質問（健康へのアプローチ）', text: '「睡眠時間の確保」や「ウォーキング」などの基本より、手軽なサプリやマッサージ店に頼りがちだ' },
+    { type: 'B', group: 'Bの質問（健康へのアプローチ）', text: '健康に関する情報は気になるが、実際の毎日の習慣はあまり変わっていない' },
+
+    // グループC (Q11-Q15)
+    { type: 'C', group: 'Cの質問（メンタルと余白）', text: '多少の体調不良や疲労があっても、よほどのことが無い限り放置している' },
+    { type: 'C', group: 'Cの質問（メンタルと余白）', text: '誰にも邪魔されない「完全な一人の時間（余白）」が、ここ最近ほとんど取れていない' },
+    { type: 'C', group: 'Cの質問（メンタルと余白）', text: '「何も生み出していない時間（ぼーっとする時間）」を過ごすと、罪悪感を感じる' },
+    { type: 'C', group: 'Cの質問（メンタルと余白）', text: '休みの日でも仕事や家族の予定、LINEの返信が頭から離れず、心が休まらない' },
+    { type: 'C', group: 'Cの質問（メンタルと余白）', text: '自分の健康やメンテナンスはいつも後回しで、目の前の用事や仕事ばかり優先してしまう' },
+
+    // グループD (Q16-Q20)
+    { type: 'D', group: 'Dの質問（運動習慣と活動量）', text: '休日は家から一歩も出ずに過ごす日が多い' },
+    { type: 'D', group: 'Dの質問（運動習慣と活動量）', text: '階段を使わずエスカレーター・エレベーターを自然と選んでしまう' },
+    { type: 'D', group: 'Dの質問（運動習慣と活動量）', text: '1日の歩数が3,000歩未満の日が週に何日もある' },
+    { type: 'D', group: 'Dの質問（運動習慣と活動量）', text: '週2回以上、定期的に身体を動かす運動習慣（ウォーキングや軽い運動等）がない' },
+    { type: 'D', group: 'Dの質問（運動習慣と活動量）', text: '「身体を動かさなきゃ」と頭では思いつつ、理由をつけて動かない日が続いている' }
+  ];
+
+  // 4項目それぞれの3段階診断コメントマスター
+  const commentMaster = {
+    A: {
+      name: 'A. 生活リズムと悪習慣',
+      good: {
+        title: '🟢 良好：生活リズムのマスター',
+        desc: '夜更かしやショート動画沼にハマることなく、自分の回復ルーティンを守れています。脳と身体の休め方をしっかりコントロールできている素晴らしい状態です。',
+        action: '💡 この調子で「寝る前の静かな時間」を大切に維持していきましょう。'
+      },
+      borderline: {
+        title: '🟡 注意：油断すると夜型になりやすいグレーゾーン',
+        desc: '普段は意識できていても、忙しい日やストレスが溜まった夜に動画巡回や夜更かしが連鎖しがちです。翌日の身体の重さに直結します。',
+        action: '💡 「疲れた夜ほどスマホを布団から離す」という1つのルールを決めましょう。'
+      },
+      warning: {
+        title: '🔴 要注意：脳と身体が夜更かし・デジタル疲労で悲鳴をあげている状態',
+        desc: '寝る前のスマホ行脚や悪習慣で、最も重要な睡眠の質が大きく削られています。50代の身体は夜の休息でしか修復されません。',
+        action: '💡 今日から「寝床にスマホを持ち込まない」「日付が変わる前に横になる」ことを最優先にしてください。'
+      }
+    },
+    B: {
+      name: 'B. 健康知識とアプローチ',
+      good: {
+        title: '🟢 良好：本質を見抜く引き算上手',
+        desc: '流行りのサプリや器具に惑わされず、地味で確実な生活習慣を大切にできています。「足し算」ではなく「引き算」で健康を保てている非常に賢い状態です。',
+        action: '💡 高価な健康法より、日々の睡眠・湯船・腹八分目を引き続き味方にしましょう。'
+      },
+      borderline: {
+        title: '🟡 注意：情報に少し流されやすい予備軍',
+        desc: '健康意識は高いものの、たまに魅力的なサプリや裏技に目移りして3日坊主になることがあります。足し算よりも地道な習慣が効果的です。',
+        action: '💡 新しいものを買う前に、「毎日湯船に15分浸かる」などの基本を優先しましょう。'
+      },
+      warning: {
+        title: '🔴 要注意：情報コレクター・器具増殖タイプ',
+        desc: '健康法やサプリを集めること自体が目的化し、足元の生活習慣が変わっていません。土台が乱れたままでは高価なサプリも効果を発揮しません。',
+        action: '💡 新しいサプリを買うのをやめ、「睡眠時間を1時間増やす」「散歩する」などの基本に立ち返りましょう。'
+      }
+    },
+    C: {
+      name: 'C. メンタルと一人の余白',
+      good: {
+        title: '🟢 良好：自分を守る余白の達人',
+        desc: '周囲に気を使いすぎず、自分のための「完全な一人の時間（余白）」をしっかり確保できています。50代にとって最も重要なメンタル防衛ができています。',
+        action: '💡 一人の静かな時間はサボりではなく最高のメンテナンスです。今後も堂々とキープしてください。'
+      },
+      borderline: {
+        title: '🟡 注意：頑張りすぎると我慢を溜め込むタイプ',
+        desc: '普段はバランスを取っていても、仕事や家族の予定が立て込むと自分を後回しにしがちです。気づかないうちに心のエネルギーが減っています。',
+        action: '💡 予定表に週に1回、数時間だけでも「誰にも邪魔されない完全オフ」を固定しましょう。'
+      },
+      warning: {
+        title: '🔴 要注意：我慢と自己犠牲の限界サイン',
+        desc: '不調や疲れを放置し、誰にも頼らずに耐えてしまっています。このままだとある日突然バッテリーが完全に切れてしまいます。',
+        action: '💡 一人の時間の余白は50代の延命装置です。「何もしない空白の時間」を堂々と確保してください。'
+      }
+    },
+    D: {
+      name: 'D. 運動習慣と活動量',
+      good: {
+        title: '🟢 良好：軽やかなフットワーク',
+        desc: '無理な筋トレではなく、日常の歩行や定期的な運動が自然と習慣化できています。血流と代謝が巡り、疲れにくい身体の土台ができています。',
+        action: '💡 日常の歩行＋朝の太陽光浴びを続けて、自律神経と筋力をキープしましょう。'
+      },
+      borderline: {
+        title: '🟡 注意：運動不足の入り口（停滞ぎみ）',
+        desc: '「動かなきゃ」と思いつつ、休日は家でじっとして歩数が落ちる日が増えています。動かないことで逆に身体が重くなっています。',
+        action: '💡 ジムに行く必要はありません。「週2回の15分散歩」からリズムを取り戻しましょう。'
+      },
+      warning: {
+        title: '🔴 要注意：運動不足による体力・代謝の低下スパイラル',
+        desc: '動かないことで体力を温存しているつもりが、身体の循環ポンプを止めてしまっています。筋力低下が日中のだるさを生んでいます。',
+        action: '💡 激しい運動は不要です。まずは「朝起きて15分近所を歩く」ことから血流を回しましょう。'
+      }
+    }
+  };
+
+  let currentIndex = 0;
+  let userAnswers = [];
+
+  function showScreen(screenId) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(screenId).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function startQuiz() {
+    currentIndex = 0;
+    userAnswers = [];
+    showScreen('screen-quiz');
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    const q = quizData[currentIndex];
+    document.getElementById('q-current').innerText = currentIndex + 1;
+    document.getElementById('q-total').innerText = quizData.length;
+    document.getElementById('group-name').innerText = q.group;
+    document.getElementById('question-text').innerText = q.text;
+
+    const progressPercent = ((currentIndex) / quizData.length) * 100;
+    document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+
+    document.getElementById('btn-back').style.display = currentIndex === 0 ? 'none' : 'inline-block';
+  }
+
+  function handleAnswer(val) {
+    userAnswers[currentIndex] = val;
+    currentIndex++;
+
+    if (currentIndex < quizData.length) {
+      renderQuestion();
+    } else {
+      showResult();
+    }
+  }
+
+  function handleBack() {
+    if (currentIndex > 0) {
+      currentIndex--;
+      renderQuestion();
+    }
+  }
+
+  function calculateScores() {
+    const scores = { A: 0, B: 0, C: 0, D: 0 };
+    userAnswers.forEach((ans, idx) => {
+      if (ans === 1) {
+        const type = quizData[idx].type;
+        scores[type]++;
+      }
+    });
+    return scores;
+  }
+
+  function showResult() {
+    const scores = calculateScores();
+    showScreen('screen-result');
+
+    // 各バーの描画と色分け
+    ['a', 'b', 'c', 'd'].forEach(k => {
+      const upper = k.toUpperCase();
+      const val = scores[upper];
+      const numEl = document.getElementById(`score-${k}`);
+      const bar = document.getElementById(`bar-${k}`);
+      numEl.innerText = `${val} / 5`;
+      
+      const pct = (val / 5) * 100;
+      setTimeout(() => {
+        bar.style.width = `${pct}%`;
+        if (val <= 2) {
+          bar.style.background = '#10b981'; // 良好（緑）
+          numEl.style.color = '#047857';
+        } else if (val === 3) {
+          bar.style.background = '#f59e0b'; // 注意（黄）
+          numEl.style.color = '#b45309';
+        } else {
+          bar.style.background = '#ef4444'; // 課題（赤）
+          numEl.style.color = '#b91c1c';
+        }
+      }, 100);
+    });
+
+    const maxVal = Math.max(scores.A, scores.B, scores.C, scores.D);
+    const titleEl = document.getElementById('res-type-title');
+    const subEl = document.getElementById('res-type-sub');
+    const cardsContainer = document.getElementById('category-cards-container');
+    cardsContainer.innerHTML = '';
+
+    // 総合タイトルの決定
+    if (maxVal <= 2) {
+      titleEl.innerText = '🏆 健やかマスター（高得点・調和のとれた生活OS）';
+      subEl.innerText = 'すべての項目が良好！無理のないペースで自分の生活と身体を守れています';
+    } else if (maxVal === 3) {
+      titleEl.innerText = '⚖️ 概ね良好・バランス調整タイプ';
+      subEl.innerText = '全体的には良い状態ですが、一部の項目で少し注意が必要です';
+    } else {
+      titleEl.innerText = '🚨 生活OS見直しサイン';
+      subEl.innerText = 'いくつかの習慣を見直すことで、毎日の身体の軽さが劇的に戻ってきます';
+    }
+
+    // 4項目すべてのカードを生成
+    ['A', 'B', 'C', 'D'].forEach(k => {
+      const val = scores[k];
+      const m = commentMaster[k];
+      let data, cardClass;
+
+      if (val <= 2) {
+        data = m.good;
+        cardClass = 'card-good';
+      } else if (val === 3) {
+        data = m.borderline;
+        cardClass = 'card-borderline';
+      } else {
+        data = m.warning;
+        cardClass = 'card-warning';
+      }
+
+      cardsContainer.innerHTML += `
+        <div class="${cardClass}">
+          <h4>${data.title}</h4>
+          <p class="card-desc">${data.desc}</p>
+          <div class="card-action">${data.action}</div>
+        </div>
+      `;
+    });
+  }
+
+  function restartQuiz() {
+    startQuiz();
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relaxing Nature Timer | リラックス・オレンジタイマー</title>
+  <meta name="description" content="オレンジ色と自然の温もりに包まれる、心地よい癒やしのタイマーアプリ">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Background Glow Orbs -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+  <div class="ambient-glow glow-3"></div>
+
+  <div class="main-wrapper">
+    <div class="timer-card">
+      <!-- Header -->
+      <header class="app-header">
+        <div class="brand">
+          <span class="brand-icon"><i class="fa-solid fa-seedling"></i></span>
+          <h1 class="brand-title">CALM TIMER</h1>
+        </div>
+        <div class="header-actions">
+          <button id="theme-toggle-btn" class="icon-btn" title="テーマ切り替え" aria-label="テーマ切り替え">
+            <i class="fa-solid fa-sun"></i>
+          </button>
+          <button id="fullscreen-btn" class="icon-btn" title="全画面表示" aria-label="全画面表示">
+            <i class="fa-solid fa-expand"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Mode Navigation -->
+      <nav class="mode-nav">
+        <button id="mode-timer" class="mode-btn active" data-mode="timer">
+          <i class="fa-regular fa-clock"></i> タイマー
+        </button>
+        <button id="mode-pomodoro" class="mode-btn" data-mode="pomodoro">
+          <i class="fa-solid fa-leaf"></i> ポモドーロ
+        </button>
+        <button id="mode-stopwatch" class="mode-btn" data-mode="stopwatch">
+          <i class="fa-solid fa-stopwatch"></i> ストップウォッチ
+        </button>
+      </nav>
+
+      <!-- Pomodoro Status Badge (Hidden by default) -->
+      <div id="pomo-status-badge" class="pomo-badge hidden">
+        <span class="pomo-dot"></span>
+        <span id="pomo-badge-text">集中タイム (25分)</span>
+        <span class="pomo-count" id="pomo-cycle-count">#1</span>
+      </div>
+
+      <!-- Main Display & Gauge -->
+      <div class="timer-visual-area">
+        <div class="gauge-container">
+          <svg class="gauge-svg" viewBox="0 0 300 300">
+            <defs>
+              <linearGradient id="orange-nature-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ff7e40" />
+                <stop offset="50%" stop-color="#ff9a44" />
+                <stop offset="100%" stop-color="#f59e0b" />
+              </linearGradient>
+              <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="6" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+            </defs>
+            <!-- Background Track -->
+            <circle class="gauge-track" cx="150" cy="150" r="130"></circle>
+            <!-- Breathing/Progress Circle -->
+            <circle id="gauge-progress" class="gauge-bar" cx="150" cy="150" r="130"></circle>
+          </svg>
+
+          <!-- Inner Content Display -->
+          <div class="time-inner-content">
+            <div id="status-label" class="status-label">READY</div>
+            <div id="main-time-display" class="time-text">05:00</div>
+            <div id="sub-time-display" class="sub-text">リラックスして集中</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Preset Buttons -->
+      <div id="presets-panel" class="presets-panel">
+        <button class="preset-pill" data-seconds="60">1分</button>
+        <button class="preset-pill" data-seconds="180">3分</button>
+        <button class="preset-pill active" data-seconds="300">5分</button>
+        <button class="preset-pill" data-seconds="600">10分</button>
+        <button class="preset-pill" data-seconds="900">15分</button>
+        <button class="preset-pill" data-seconds="1500">25分</button>
+      </div>
+
+      <!-- Custom Time Inputs -->
+      <div id="custom-time-panel" class="custom-time-panel">
+        <div class="input-wrap">
+          <input type="number" id="input-minutes" min="0" max="999" value="5" aria-label="分">
+          <span class="unit">分</span>
+        </div>
+        <span class="colon">:</span>
+        <div class="input-wrap">
+          <input type="number" id="input-seconds" min="0" max="59" value="0" aria-label="秒">
+          <span class="unit">秒</span>
+        </div>
+        <button id="apply-custom-btn" class="apply-btn" title="設定を適用">
+          <i class="fa-solid fa-check"></i>
+        </button>
+      </div>
+
+      <!-- Main Action Controls -->
+      <div class="control-actions">
+        <button id="reset-btn" class="ctrl-btn secondary" title="リセット" aria-label="リセット">
+          <i class="fa-solid fa-rotate-left"></i>
+        </button>
+        
+        <button id="toggle-btn" class="ctrl-btn primary" title="スタート" aria-label="スタート / 一時停止">
+          <i class="fa-solid fa-play" id="toggle-icon"></i>
+        </button>
+
+        <button id="lap-btn" class="ctrl-btn secondary hidden" title="ラップタイム記録" aria-label="ラップ">
+          <i class="fa-solid fa-flag"></i>
+        </button>
+
+        <button id="sound-settings-toggle" class="ctrl-btn secondary" title="癒やし音・BGM設定" aria-label="サウンド設定">
+          <i class="fa-solid fa-volume-high"></i>
+        </button>
+      </div>
+
+      <!-- Laps List for Stopwatch -->
+      <div id="lap-container" class="lap-container hidden">
+        <div class="lap-header">
+          <span>ラップ</span>
+          <span>タイム</span>
+        </div>
+        <ul id="lap-list" class="lap-list"></ul>
+      </div>
+
+      <!-- Sound & Nature Settings Accordion/Modal -->
+      <div id="sound-settings-drawer" class="sound-drawer">
+        <div class="drawer-header">
+          <span class="drawer-title"><i class="fa-solid fa-music"></i> 癒やしのサウンド設定</span>
+          <button id="drawer-close-btn" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <!-- Alarm Sound Selection -->
+        <div class="setting-group">
+          <label class="setting-label">
+            <span>完了チャイム（やさしい癒やし音）</span>
+            <button id="preview-alarm-btn" class="preview-btn" title="試聴する">
+              <i class="fa-solid fa-play"></i> 試聴
+            </button>
+          </label>
+          <div class="sound-selector-grid">
+            <button class="sound-chip active" data-sound="bowl">
+              <i class="fa-solid fa-bell"></i> シンギングボウル
+            </button>
+            <button class="sound-chip" data-sound="kalimba">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> カリンバ (木琴)
+            </button>
+            <button class="sound-chip" data-sound="chimes">
+              <i class="fa-solid fa-wind"></i> 風鈴・チャイム
+            </button>
+            <button class="sound-chip" data-sound="harp">
+              <i class="fa-solid fa-heart"></i> やわらかなハープ
+            </button>
+          </div>
+        </div>
+
+        <!-- Ambient Nature BGM -->
+        <div class="setting-group">
+          <div class="setting-label">
+            <span>タイマー中の環境音 (アンビエントBGM)</span>
+            <label class="switch">
+              <input type="checkbox" id="ambient-toggle">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="sound-selector-grid" id="ambient-grid">
+            <button class="sound-chip ambient-chip active" data-ambient="forest">
+              <i class="fa-solid fa-tree"></i> 森のそよ風
+            </button>
+            <button class="sound-chip ambient-chip" data-ambient="waves">
+              <i class="fa-solid fa-water"></i> 穏やかな波
+            </button>
+            <button class="sound-chip ambient-chip" data-ambient="rain">
+              <i class="fa-solid fa-cloud-rain"></i> やさしい雨音
+            </button>
+            <button class="sound-chip ambient-chip" data-ambient="hearth">
+              <i class="fa-solid fa-fire"></i> 暖かな焚き火
+            </button>
+          </div>
+        </div>
+
+        <!-- Volume Sliders -->
+        <div class="setting-group volume-group">
+          <div class="vol-item">
+            <span class="vol-label"><i class="fa-solid fa-bell"></i> 完了音量</span>
+            <input type="range" id="alarm-vol-slider" min="0" max="100" value="70">
+            <span id="alarm-vol-val" class="vol-val">70%</span>
+          </div>
+          <div class="vol-item">
+            <span class="vol-label"><i class="fa-solid fa-leaf"></i> 環境音量</span>
+            <input type="range" id="ambient-vol-slider" min="0" max="100" value="40">
+            <span id="ambient-vol-val" class="vol-val">40%</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

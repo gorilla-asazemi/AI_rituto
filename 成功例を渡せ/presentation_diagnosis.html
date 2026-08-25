@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>プレゼン・商談力診断｜なぜ伝わらない？あなたのプレゼン盲点タイプ診断</title>
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-dark: #0f172a;
+      --primary-light: #eff6ff;
+      --accent: #d97706;
+      --text-main: #1f2937;
+      --text-muted: #64748b;
+      --bg-base: #f1f5f9;
+      --card-bg: #ffffff;
+      --border-color: #cbd5e1;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Sans", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      line-height: 1.7;
+      padding: 24px 16px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .app-container {
+      max-width: 680px;
+      width: 100%;
+      background: var(--card-bg);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 36px 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (max-width: 480px) {
+      .app-container {
+        padding: 24px 18px;
+        border-radius: 16px;
+      }
+    }
+
+    .screen {
+      display: none;
+      animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .tag-badge {
+      display: inline-block;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+
+    .main-title {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--primary-dark);
+      line-height: 1.4;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .lead-desc {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      text-align: left;
+    }
+
+    .start-intro {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 24px;
+      font-size: 0.9rem;
+    }
+    .start-intro ul {
+      margin-left: 20px;
+      margin-top: 8px;
+    }
+
+    /* プログレスバー */
+    .progress-container {
+      margin-bottom: 24px;
+    }
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .progress-info .curr-q {
+      color: var(--primary);
+      font-size: 1.05rem;
+    }
+    .progress-track {
+      background-color: #e2e8f0;
+      height: 10px;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6, var(--primary));
+      width: 0%;
+      transition: width 0.25s ease-out;
+      border-radius: 6px;
+    }
+
+    /* 質問カード */
+    .question-card {
+      background: #f8fafc;
+      border: 2px solid var(--primary-light);
+      border-radius: 16px;
+      padding: 32px 20px;
+      min-height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 28px;
+      line-height: 1.55;
+    }
+
+    /* 回答ボタン */
+    .answer-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .btn-choice {
+      width: 100%;
+      padding: 16px 20px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border: none;
+      outline: none;
+    }
+    .btn-yes {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(30, 58, 138, 0.25);
+    }
+    .btn-yes:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+    .btn-no {
+      background: #ffffff;
+      color: #475569;
+      border: 2px solid #cbd5e1;
+    }
+    .btn-no:hover {
+      background: #f8fafc;
+      border-color: #94a3b8;
+      transform: translateY(-2px);
+    }
+    .btn-back {
+      margin-top: 14px;
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-decoration: underline;
+      display: inline-block;
+      text-align: center;
+      width: 100%;
+    }
+    .btn-back:hover {
+      color: #64748b;
+    }
+
+    /* 結果画面 */
+    .result-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .result-type-name {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: var(--primary-dark);
+      margin: 8px 0;
+    }
+    .result-subcatch {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    /* スコアグラフ */
+    .score-board {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 28px;
+    }
+    .score-board-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      text-align: center;
+    }
+    .score-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 0.88rem;
+    }
+    .score-label {
+      width: 180px;
+      font-weight: 600;
+    }
+    .score-bar-bg {
+      flex: 1;
+      height: 10px;
+      background: #e2e8f0;
+      border-radius: 5px;
+      overflow: hidden;
+      margin: 0 10px;
+    }
+    .score-bar-val {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 5px;
+      width: 0%;
+      transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .score-num {
+      width: 45px;
+      text-align: right;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    /* タイプ解説カード */
+    .advice-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-left: 5px solid var(--primary);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .advice-card h3 {
+      font-size: 1.15rem;
+      color: var(--primary-dark);
+      margin-bottom: 10px;
+    }
+    .advice-card h4 {
+      font-size: 0.95rem;
+      color: #1e293b;
+      margin: 14px 0 6px 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .advice-card p {
+      font-size: 0.92rem;
+      color: #334155;
+      margin-bottom: 10px;
+    }
+    .highlight-box {
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin: 10px 0;
+      font-size: 0.88rem;
+    }
+
+    /* 全タイプ一覧アコーディオン */
+    .other-types-box {
+      margin-top: 28px;
+      border-top: 1px solid var(--border-color);
+      padding-top: 20px;
+    }
+    .accordion-toggle {
+      width: 100%;
+      background: #f1f5f9;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      color: #475569;
+      cursor: pointer;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+    .accordion-content {
+      display: none;
+      margin-top: 16px;
+    }
+    .accordion-content.open {
+      display: block;
+    }
+
+    /* CTAセクション */
+    .cta-area {
+      background: linear-gradient(135deg, var(--primary-light), #f8fafc);
+      border: 2px solid #bfdbfe;
+      border-radius: 16px;
+      padding: 24px 20px;
+      text-align: center;
+      margin-top: 32px;
+    }
+    .cta-area h3 {
+      font-size: 1.15rem;
+      color: var(--primary-dark);
+      margin-bottom: 8px;
+    }
+    .cta-area p {
+      font-size: 0.88rem;
+      color: #334155;
+      margin-bottom: 16px;
+    }
+    .btn-cta {
+      display: inline-block;
+      width: 100%;
+      max-width: 320px;
+      background: var(--primary);
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 14px 20px;
+      border-radius: 10px;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(30, 58, 138, 0.25);
+      transition: background 0.2s;
+    }
+    .btn-cta:hover {
+      background: var(--primary-dark);
+    }
+    .btn-restart {
+      margin-top: 12px;
+      background: transparent;
+      border: none;
+      color: #64748b;
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+
+  <!-- 1. スタート画面 -->
+  <div id="screen-start" class="screen active">
+    <div style="text-align:center;">
+      <span class="tag-badge">全20問 / 所要時間 約1分半</span>
+      <h1 class="main-title">【プレゼン・商談力診断】<br>なぜ伝わらない？あなたのプレゼン盲点タイプ診断</h1>
+    </div>
+    
+    <p class="lead-desc" style="text-align:center;">
+      一生懸命説明したのに「検討します」で終わってしまう……。<br>
+      その原因は、話し方のスキルではなく<strong>「無意識のプレゼンのズレ（盲点）」</strong>にあります。
+    </p>
+
+    <div class="start-intro">
+      <strong>診断の進め方</strong>
+      <ul>
+        <li>20個の質問に「◯（当てはまる）」か「✕（当てはまらない）」でお答えください。</li>
+        <li>あなたのプレゼン・商談の傾向を4タイプに分類して可視化します。</li>
+        <li>診断後、すぐに具体的な改善アプローチをご確認いただけます。</li>
+      </ul>
+    </div>
+
+    <button class="btn-choice btn-yes" onclick="startQuiz()">
+      診断をスタートする（無料）
+    </button>
+  </div>
+
+  <!-- 2. 設問画面 -->
+  <div id="screen-quiz" class="screen">
+    <div class="progress-container">
+      <div class="progress-info">
+        <span>診断中：<span id="group-name">グループA</span></span>
+        <span><span class="curr-q" id="q-current">1</span> / <span id="q-total">20</span></span>
+      </div>
+      <div class="progress-track">
+        <div id="progress-bar" class="progress-fill"></div>
+      </div>
+    </div>
+
+    <div id="question-text" class="question-card">
+      質問文がここに入ります
+    </div>
+
+    <div class="answer-actions">
+      <button class="btn-choice btn-yes" onclick="handleAnswer(1)">
+        ◯&nbsp;&nbsp;当てはまる
+      </button>
+      <button class="btn-choice btn-no" onclick="handleAnswer(0)">
+        ✕&nbsp;&nbsp;当てはまらない
+      </button>
+    </div>
+
+    <button id="btn-back" class="btn-back" onclick="handleBack()">← 前の質問に戻る</button>
+  </div>
+
+  <!-- 3. 結果画面 -->
+  <div id="screen-result" class="screen">
+    <div class="result-header">
+      <span class="tag-badge">あなたの診断結果</span>
+      <div id="res-type-title" class="result-type-name">判定中</div>
+      <div id="res-type-sub" class="result-subcatch"></div>
+    </div>
+
+    <!-- スコア内訳グラフ -->
+    <div class="score-board">
+      <div class="score-board-title">📊 タイプ別スコア内訳（各5問中）</div>
+      
+      <div class="score-item">
+        <div class="score-label">A. 商品説明会傾向</div>
+        <div class="score-bar-bg"><div id="bar-a" class="score-bar-val"></div></div>
+        <div class="score-num" id="score-a">0個</div>
+      </div>
+      <div class="score-item">
+        <div class="score-label">B. 全部盛り・引き算苦手</div>
+        <div class="score-bar-bg"><div id="bar-b" class="score-bar-val"></div></div>
+        <div class="score-num" id="score-b">0個</div>
+      </div>
+      <div class="score-item">
+        <div class="score-label">C. 自分本位・発表会傾向</div>
+        <div class="score-bar-bg"><div id="bar-c" class="score-bar-val"></div></div>
+        <div class="score-num" id="score-c">0個</div>
+      </div>
+      <div class="score-item">
+        <div class="score-label">D. スライド・演出依存</div>
+        <div class="score-bar-bg"><div id="bar-d" class="score-bar-val"></div></div>
+        <div class="score-num" id="score-d">0個</div>
+      </div>
+    </div>
+
+    <!-- メイン診断結果カード -->
+    <div id="primary-advice-container"></div>
+
+    <!-- 全タイプ解説トグル -->
+    <div class="other-types-box">
+      <button class="accordion-toggle" onclick="toggleAccordion()">
+        ▼ 他のタイプの特徴・改善アプローチもすべて見る
+      </button>
+      <div id="all-types-container" class="accordion-content"></div>
+    </div>
+
+    <!-- CTAセクション -->
+    <div class="cta-area">
+      <h3>🎯 伝わるプレゼンは「シナリオ9割」</h3>
+      <p>
+        プレゼンの成果は、話し方やデザインよりも「何を、どの順番で伝えるか」で決まります。<br>
+        あなたの強みを活かしたシナリオ添削やオンライン講座をご案内しています。
+      </p>
+      <a href="https://www.street-academy.com/onetime/services/2874" target="_blank" class="btn-cta">
+        まずは相談してみる
+      </a>
+      <br>
+      <button class="btn-restart" onclick="restartQuiz()">もう一度診断する</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // 全20問データ（各5問）
+  const quizData = [
+    // グループA (Q1-Q5)
+    { type: 'A', group: 'Aの質問（説明アプローチ）', text: '商談やプレゼンで、自社の商品やサービスの特徴を1ページ目から順番に説明している' },
+    { type: 'A', group: 'Aの質問（説明アプローチ）', text: 'プレゼンが終わった後、相手から「分かりました。検討します」と言われて終わることが多い' },
+    { type: 'A', group: 'Aの質問（説明アプローチ）', text: '「相手が何に困っているか」を深く聞く前に、まずこちらの提案内容を一通り話してしまう' },
+    { type: 'A', group: 'Aの質問（説明アプローチ）', text: 'プレゼンの時間の半分以上、自分が一方的に話し続けていることが多い' },
+    { type: 'A', group: 'Aの質問（説明アプローチ）', text: '「商品の良さをしっかり説明できれば、相手は買ってくれる（動いてくれる）」と思っている' },
+
+    // グループB (Q6-Q10)
+    { type: 'B', group: 'Bの質問（情報量の整理）', text: '「あれもこれも伝えないともったいない」と思い、スライドの文字や情報が多くなりがちだ' },
+    { type: 'B', group: 'Bの質問（情報量の整理）', text: 'プレゼンを終えたとき、一番伝えたかった結論が相手に届いていない感覚がある' },
+    { type: 'B', group: 'Bの質問（情報量の整理）', text: '準備しているうちに話の論点が増えてしまい、どこを削ればいいか分からなくなる' },
+    { type: 'B', group: 'Bの質問（情報量の整理）', text: '持ち時間ギリギリまで早口で話し切ることが多い（時間が足りなくなりがち）' },
+    { type: 'B', group: 'Bの質問（情報量の整理）', text: 'スライドの余白があると不安で、補足説明やグラフ、イラストをつい足してしまう' },
+
+    // グループC (Q11-Q15)
+    { type: 'C', group: 'Cの質問（視点の置き方）', text: '「自分が話したいこと」「自分がアピールしたい実績」からプレゼンの構成を作っている' },
+    { type: 'C', group: 'Cの質問（視点の置き方）', text: '相手の表情やうなずきを見る余裕がなく、用意した原稿通りに進めることに必死になる' },
+    { type: 'C', group: 'Cの質問（視点の置き方）', text: 'プレゼンは「自分の考えや企画の正しさを認めてもらう場」だと思っている' },
+    { type: 'C', group: 'Cの質問（視点の置き方）', text: '相手が今一番気になっている悩みや、頭の中の「優先順位」を事前に把握できていない' },
+    { type: 'C', group: 'Cの質問（視点の置き方）', text: '「結論ファースト」で話しているつもりだが、相手から「で、何が言いたいの？」と言われることがある' },
+
+    // グループD (Q16-Q20)
+    { type: 'D', group: 'Dの質問（準備と構成）', text: 'シナリオ（話す順番）を考えるより先に、PowerPointを開いてスライドを作り始めてしまう' },
+    { type: 'D', group: 'Dの質問（準備と構成）', text: 'デザインやアニメーション、見栄えを整えることに準備時間の大半を使ってしまう' },
+    { type: 'D', group: 'Dの質問（準備と構成）', text: '「声の大きさ」や「堂々とした話し方」など、表面的なテクニックで乗り切ろうとしがちだ' },
+    { type: 'D', group: 'Dの質問（準備と構成）', text: 'スライド（資料）がないと、自分の提案の要点を3分で相手に説明できない' },
+    { type: 'D', group: 'Dの質問（準備と構成）', text: 'プレゼンがうまくいかなかったとき、「資料の出来栄え」や「話し方の滑らかさ」のせいにしてしまう' }
+  ];
+
+  // 各タイプの詳細テキストデータ
+  const typeMaster = {
+    A: {
+      name: '商品説明会タイプ',
+      catch: '売るな、聞け。プレゼンは相手を理解する時間',
+      features: '自社の商品・サービスの特徴や実績を、最初から丁寧に分かりやすく説明するタイプです。しかし、どれだけ流暢に説明しても相手の関心と接続していなければ届きません。説明の量と相手の納得は比例しないのです。',
+      dialogue: `
+        <strong>【よくあるズレ】</strong><br>
+        自社の強みや機能を完璧にプレゼンして「いかがでしょうか？」と聞く ➔ 相手「分かりました、検討します」で終了。<br>
+        <em>※これは商談やプレゼンではなく、ただの「商品説明会」になってしまっています。</em>
+      `,
+      actionTitle: '改善アプローチ：相手の「課題」を見つける質問から始める',
+      action: 'プレゼンとはこちらを理解してもらう時間ではなく、相手を理解する時間です。相手が目指していること、抱えている悩み、頭の中の優先順位をまず把握し、その課題を解決するための手段として自分の提案を提示しましょう。'
+    },
+    B: {
+      name: '全部盛り・引き算苦手タイプ',
+      catch: '勇気ある引き算。情報を増やすほど相手の頭はパンクする',
+      features: '「これも伝えないと損」「背景も詳しく話さなきゃ」と情報を詰め込みすぎてしまうタイプです。情報量が多すぎると、相手は「結局何がいちばん重要だったのか」を処理しきれなくなります。',
+      dialogue: `
+        <strong>【よくあるズレ】</strong><br>
+        スライドに文字とグラフがびっしり。時間いっぱい早口で説明しきる ➔ 相手「情報が多くて整理がつかないので持ち帰ります」。<br>
+        <em>※伝えたい熱意が裏目に出て、相手の頭の中のメモリをオーバーヒートさせています。</em>
+      `,
+      actionTitle: '改善アプローチ：「何を話すか」以上に「何を話さないか」を決める',
+      action: '1つのプレゼンで相手に持ち帰ってもらうメッセージは1つに絞ります。不要な情報、枝葉のデータは思い切って削り、一番伝えたい結論とその理由を際立たせましょう。'
+    },
+    C: {
+      name: '自分本位・発表会タイプ',
+      catch: '人の最大関心事は「自分」。相手中心のシナリオへ',
+      features: '「自分の正しさ」や「自分が話したいこと」から構成を作ってしまい、相手目線が抜け落ちてしまうタイプです。相手からすると「私の状況を分かってくれていない」と感じてしまいます。',
+      dialogue: `
+        <strong>【よくあるズレ】</strong><br>
+        「弊社はこれができます、実績はこうです」と自分語りが続く ➔ 相手「で、うちにとって何のメリットがあるの？」<br>
+        <em>※相手の頭の中にある「優先順位ランキングボード」に接続できていません。</em>
+      `,
+      actionTitle: '改善アプローチ：結論ファーストの結論は「相手が最も知りたい答え」',
+      action: 'プレゼンは発表会ではありません。結論ファーストの「結論」とは、自分が言いたいことではなく、聞き手が最も知りたがっている答えのことです。主語を「自分」から「相手」に変えて組み立てましょう。'
+    },
+    D: {
+      name: 'スライド・演出依存タイプ',
+      catch: 'シナリオ9割。美しさの前に順番を直す',
+      features: '構成を固める前にPowerPointを開き、デザインやレイアウトの調整に時間を使ってしまうタイプです。スライドが綺麗でも、話す順番（シナリオ）が崩れていれば相手の心は動きません。',
+      dialogue: `
+        <strong>【よくあるズレ】</strong><br>
+        見栄えの良い洗練されたスライドを用意したのに、なぜか相手の反応が薄い。<br>
+        <em>※スライドの装飾や話し方のテクニックで、シナリオの論理破綻を隠そうとしてしまっています。</em>
+      `,
+      actionTitle: '改善アプローチ：まずPCを閉じ、紙とペンで「話す順番」を設計する',
+      action: '成果を分けるのはスライドの見た目ではなく「何を、どの順番で伝えるか」です。まずは資料作成ソフトを閉じ、話の流れ（問い・共感・結論・理由・具体例・アクション）のシナリオを完成させてからスライドを作りましょう。'
+    }
+  };
+
+  let currentIndex = 0;
+  let userAnswers = [];
+
+  function showScreen(screenId) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(screenId).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function startQuiz() {
+    currentIndex = 0;
+    userAnswers = [];
+    showScreen('screen-quiz');
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    const q = quizData[currentIndex];
+    document.getElementById('q-current').innerText = currentIndex + 1;
+    document.getElementById('q-total').innerText = quizData.length;
+    document.getElementById('group-name').innerText = q.group;
+    document.getElementById('question-text').innerText = q.text;
+
+    const progressPercent = ((currentIndex) / quizData.length) * 100;
+    document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+
+    document.getElementById('btn-back').style.display = currentIndex === 0 ? 'none' : 'inline-block';
+  }
+
+  function handleAnswer(val) {
+    userAnswers[currentIndex] = val;
+    currentIndex++;
+
+    if (currentIndex < quizData.length) {
+      renderQuestion();
+    } else {
+      showResult();
+    }
+  }
+
+  function handleBack() {
+    if (currentIndex > 0) {
+      currentIndex--;
+      renderQuestion();
+    }
+  }
+
+  function calculateScores() {
+    const scores = { A: 0, B: 0, C: 0, D: 0 };
+    userAnswers.forEach((ans, idx) => {
+      if (ans === 1) {
+        const type = quizData[idx].type;
+        scores[type]++;
+      }
+    });
+    return scores;
+  }
+
+  function showResult() {
+    const scores = calculateScores();
+    showScreen('screen-result');
+
+    // 各バーの描画と色分け
+    ['a', 'b', 'c', 'd'].forEach(k => {
+      const upper = k.toUpperCase();
+      const val = scores[upper];
+      document.getElementById(`score-${k}`).innerText = `${val} / 5 個`;
+      const pct = (val / 5) * 100;
+      setTimeout(() => {
+        const bar = document.getElementById(`bar-${k}`);
+        bar.style.width = `${pct}%`;
+        // スコアに応じたバーの色分け（0-1: 緑, 2: 青, 3: 黄/オレンジ, 4-5: 赤）
+        if (val <= 1) {
+          bar.style.background = '#10b981'; // 良好（緑）
+        } else if (val === 2) {
+          bar.style.background = '#3b82f6'; // 概ね良好（青）
+        } else if (val === 3) {
+          bar.style.background = '#f59e0b'; // 注意（黄）
+        } else {
+          bar.style.background = '#ef4444'; // 課題（赤）
+        }
+      }, 100);
+    });
+
+    const maxVal = Math.max(scores.A, scores.B, scores.C, scores.D);
+    const titleEl = document.getElementById('res-type-title');
+    const subEl = document.getElementById('res-type-sub');
+    const primaryContainer = document.getElementById('primary-advice-container');
+    primaryContainer.innerHTML = '';
+
+    // パターン1: 全項目が2点以下（最大値が2以下） ➔ 【超優秀・高評価】
+    if (maxVal <= 2) {
+      titleEl.innerText = '🏆 相手目線のマスター（高得点・伝わるプレゼンター）';
+      subEl.innerText = '4つの盲点をしっかり回避できており、相手中心のシナリオが完成されています！';
+      
+      let badgeList = [];
+      if (scores.A <= 1) badgeList.push('「相手の課題から入る力」');
+      if (scores.B <= 1) badgeList.push('「勇気ある引き算力」');
+      if (scores.C <= 1) badgeList.push('「相手本位の視点」');
+      if (scores.D <= 1) badgeList.push('「シナリオ構成力」');
+
+      primaryContainer.innerHTML = `
+        <div class="advice-card" style="border-left-color: #10b981;">
+          <h3 style="color: #065f46;">✨ 素晴らしいプレゼンテーション力です！</h3>
+          <p style="font-weight:700; color:#047857; margin-bottom:10px;">特に ${badgeList.join('・')} が高いレベルで身についています。</p>
+          <h4>🔍 診断結果のポイント</h4>
+          <p>
+            プレゼンで多くの人が陥りがちな「商品説明会」「情報の詰め込みすぎ」「自分本位の発表」「スライド過信」の罠をほとんど踏んでいません。<br>
+            相手の頭の中の優先順位を理解し、「何を、どの順番で話せば相手が動くか」を感覚または理論でしっかり掴めている状態です。
+          </p>
+          <h4>💡 さらなる高みへ</h4>
+          <p>
+            現在の高いシナリオ力を土台に、相手の「まだ言葉になっていない本音」を引き出す問いかけや、相手のタイプ別の演出・構成の使い分けを磨くことで、商談やプレゼンの決定率はさらに高まります。
+          </p>
+        </div>
+      `;
+      return;
+    }
+
+    // パターン2: 3点以上の項目がある場合（課題・注意点の特定）
+    const warningTypes = Object.keys(scores).filter(k => scores[k] >= 4); // 明確な課題（4-5点）
+    const cautionTypes = Object.keys(scores).filter(k => scores[k] === 3); // 注意・予備軍（3点）
+
+    if (warningTypes.length > 0) {
+      // 4〜5点がある場合
+      const names = warningTypes.map(t => typeMaster[t].name).join(' ✕ ');
+      titleEl.innerText = `【${names}】の傾向`;
+      subEl.innerText = 'ここを見直すだけで、プレゼンの決定率が劇的に上がります！';
+
+      warningTypes.forEach(t => {
+        primaryContainer.innerHTML += renderAdviceCard(t, scores[t]);
+      });
+
+      if (cautionTypes.length > 0) {
+        primaryContainer.innerHTML += `
+          <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:10px; padding:14px; margin-top:14px; font-size:0.9rem; color:#92400e;">
+            <strong>⚠️ あわせて注意したい傾向（3点）：</strong><br>
+            ${cautionTypes.map(t => `・<strong>${typeMaster[t].name}</strong>（${typeMaster[t].catch}）`).join('<br>')}
+          </div>
+        `;
+      }
+    } else {
+      // 4点以上はなく、3点が最高得点の場合（ボーダーライン）
+      const names = cautionTypes.map(t => typeMaster[t].name).join(' ✕ ');
+      titleEl.innerText = `【${names}】（時々出やすい傾向）`;
+      subEl.innerText = '全体的には良好ですが、状況によって少しクセが出ることがあります';
+
+      cautionTypes.forEach(t => {
+        primaryContainer.innerHTML += renderAdviceCard(t, scores[t]);
+      });
+    }
+
+    const allContainer = document.getElementById('all-types-container');
+    allContainer.innerHTML = '';
+    ['A', 'B', 'C', 'D'].forEach(t => {
+      allContainer.innerHTML += renderAdviceCard(t);
+    });
+  }
+
+  function renderAdviceCard(typeKey) {
+    const d = typeMaster[typeKey];
+    return `
+      <div class="advice-card">
+        <h3>【${d.name}】</h3>
+        <p style="font-weight:700; color:var(--accent); font-size:0.92rem; margin-bottom:8px;">${d.catch}</p>
+        <h4>🔍 このタイプの特徴と盲点</h4>
+        <p>${d.features}</p>
+        <div class="highlight-box">${d.dialogue}</div>
+        <h4>💡 ${d.actionTitle}</h4>
+        <p>${d.action}</p>
+      </div>
+    `;
+  }
+
+  function toggleAccordion() {
+    const el = document.getElementById('all-types-container');
+    el.classList.toggle('open');
+    const btn = document.querySelector('.accordion-toggle');
+    btn.innerText = el.classList.contains('open') ? '▲ 閉じる' : '▼ 他のタイプの特徴・改善アプローチもすべて見る';
+  }
+
+  function restartQuiz() {
+    startQuiz();
+  }
+</script>
+
+</body>
+</html>

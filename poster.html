@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中央公園 夏祭りポスター</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@500;700&family=Noto+Sans+JP:wght@700;900&family=Yuji+Syuku&display=swap" rel="stylesheet">
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    background-color: #0b132b;
+    font-family: 'Noto Sans JP', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    color: #ffffff;
+  }
+  .poster {
+    width: 100%;
+    max-width: 750px;
+    background: linear-gradient(180deg, #090e24 0%, #1c2541 40%, #3a506b 100%);
+    border: 12px solid #e63946;
+    border-radius: 24px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    padding: 35px 30px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  /* 装飾の背景円・提灯風 */
+  .lantern-left, .lantern-right {
+    position: absolute;
+    top: -10px;
+    width: 70px;
+    height: 90px;
+    background: radial-gradient(circle, #ff4d6d 30%, #c9184a 100%);
+    border-radius: 15px;
+    border: 3px solid #ffb703;
+    box-shadow: 0 0 25px #ff4d6d;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Yuji Syuku', serif;
+    font-size: 32px;
+    color: #fff;
+    font-weight: bold;
+  }
+  .lantern-left { left: 40px; }
+  .lantern-right { right: 40px; }
+
+  .header-tag {
+    text-align: center;
+    background: #ffb703;
+    color: #000;
+    display: inline-block;
+    padding: 6px 24px;
+    border-radius: 30px;
+    font-size: 1.2rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 15px rgba(255,183,3,0.4);
+  }
+  .header-wrap {
+    text-align: center;
+    margin-top: 15px;
+  }
+
+  h1.title {
+    font-family: 'Yuji Syuku', serif;
+    font-size: 4rem;
+    color: #ffb703;
+    text-shadow: 0 0 20px #ff0055, 3px 3px 0px #d90429;
+    letter-spacing: 8px;
+    margin: 10px 0;
+    line-height: 1.1;
+  }
+  
+  .subtitle {
+    font-family: 'Kiwi Maru', serif;
+    font-size: 1.5rem;
+    color: #e0fbfc;
+    margin-bottom: 25px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+  }
+
+  /* 目玉：インフルエンサー特別枠 */
+  .guest-banner {
+    background: linear-gradient(135deg, #d4af37 0%, #fff3a0 50%, #aa7c11 100%);
+    color: #000;
+    border-radius: 18px;
+    padding: 20px;
+    margin: 20px 0;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+    border: 4px solid #fff;
+    animation: pulse 2s infinite alternate;
+  }
+  .guest-badge {
+    background: #e63946;
+    color: #fff;
+    padding: 4px 16px;
+    border-radius: 20px;
+    font-size: 1.1rem;
+    font-weight: 900;
+    display: inline-block;
+    margin-bottom: 8px;
+  }
+  .guest-title {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: #1a1a1a;
+    line-height: 1.3;
+  }
+  .guest-time {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: #d90429;
+    margin-top: 5px;
+    text-shadow: 1px 1px 0 #fff;
+  }
+
+  /* 情報グリッド */
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin: 20px 0;
+  }
+  .info-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 18px;
+    text-align: center;
+  }
+  .info-label {
+    color: #ffb703;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .info-value {
+    font-size: 1.6rem;
+    font-weight: 900;
+  }
+  .info-sub {
+    font-size: 0.95rem;
+    color: #ffccd5;
+    margin-top: 4px;
+  }
+
+  /* 出し物コーナー */
+  .attractions {
+    background: rgba(230, 57, 70, 0.25);
+    border: 2px dashed #ff4d6d;
+    border-radius: 16px;
+    padding: 18px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .attraction-tags {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+  }
+  .tag {
+    background: #ff4d6d;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 25px;
+    font-size: 1.3rem;
+    font-weight: 900;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  }
+
+  .footer-note {
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #ffd166;
+    margin-top: 15px;
+  }
+</style>
+</head>
+<body>
+
+<div class="poster">
+  <div class="lantern-left">祭</div>
+  <div class="lantern-right">祭</div>
+
+  <div class="header-wrap">
+    <div class="header-tag">【回覧】町内会 夏祭り</div>
+    <h1 class="title">中央公園 夏祭り</h1>
+    <p class="subtitle">✨ 家族みんなでつくる、夏の最高の思い出！ ✨</p>
+  </div>
+
+  <!-- 目玉インフルエンサー枠 -->
+  <div class="guest-banner">
+    <span class="guest-badge">🔥 超目玉スペシャル企画 🔥</span>
+    <div class="guest-title">大物インフルエンサー ゲスト登場！</div>
+    <div class="guest-time">18:00 〜 18:15 (15分限定ライブ!)</div>
+    <p style="font-size: 0.95rem; margin-top: 5px; font-weight: bold;">※めったに見られない超プレミアステージをお見逃しなく！</p>
+  </div>
+
+  <!-- 日時・場所 -->
+  <div class="info-grid">
+    <div class="info-card">
+      <div class="info-label">📅 開催日時</div>
+      <div class="info-value">8月1日(土)</div>
+      <div class="info-sub">17:00 〜 19:00</div>
+    </div>
+    <div class="info-card">
+      <div class="info-label">📍 開催場所</div>
+      <div class="info-value">中央公園</div>
+      <div class="info-sub">☔ 雨天時は「公民館」で開催</div>
+    </div>
+  </div>
+
+  <!-- 出し物 -->
+  <div class="attractions">
+    <div style="font-weight: bold; font-size: 1.2rem; color: #fff;">🍧 たのしい出し物・お店が盛りだくさん！ 🏮</div>
+    <div class="attraction-tags">
+      <span class="tag">🍢 美味しい屋台</span>
+      <span class="tag">👘 賑やか盆踊り</span>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    ご家族・お友達を誘ってぜひお越しください！お待ちしています！
+  </div>
+</div>
+
+</body>
+</html>

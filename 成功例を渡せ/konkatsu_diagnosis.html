@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>婚活コミュニケーションタイプ診断｜ちゃんと話したのに、なぜ次につながらない？</title>
+  <style>
+    :root {
+      --primary: #2d7a4c;
+      --primary-dark: #1e5634;
+      --primary-light: #eaf5ee;
+      --accent: #e67e22;
+      --text-main: #2c3e50;
+      --text-muted: #666666;
+      --bg-base: #f5f7f6;
+      --card-bg: #ffffff;
+      --border-color: #e2e8f0;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Sans", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      line-height: 1.7;
+      padding: 24px 16px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .app-container {
+      max-width: 680px;
+      width: 100%;
+      background: var(--card-bg);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 36px 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (max-width: 480px) {
+      .app-container {
+        padding: 24px 18px;
+        border-radius: 16px;
+      }
+    }
+
+    /* 画面切り替えアニメーション */
+    .screen {
+      display: none;
+      animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* タイポグラフィ・共通パーツ */
+    .tag-badge {
+      display: inline-block;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+
+    .main-title {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--primary-dark);
+      line-height: 1.4;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .lead-desc {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      text-align: left;
+    }
+
+    /* スタート画面 */
+    .start-intro {
+      background: #fafcfb;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 24px;
+      font-size: 0.9rem;
+    }
+    .start-intro ul {
+      margin-left: 20px;
+      margin-top: 8px;
+    }
+
+    /* プログレスバー */
+    .progress-container {
+      margin-bottom: 24px;
+    }
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .progress-info .curr-q {
+      color: var(--primary);
+      font-size: 1.05rem;
+    }
+    .progress-track {
+      background-color: #edf2f7;
+      height: 10px;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #48bb78, var(--primary));
+      width: 0%;
+      transition: width 0.25s ease-out;
+      border-radius: 6px;
+    }
+
+    /* 質問カード */
+    .question-card {
+      background: #fafcfb;
+      border: 2px solid var(--primary-light);
+      border-radius: 16px;
+      padding: 32px 20px;
+      min-height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 28px;
+      line-height: 1.55;
+    }
+
+    /* 回答ボタン */
+    .answer-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .btn-choice {
+      width: 100%;
+      padding: 16px 20px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border: none;
+      outline: none;
+    }
+    .btn-yes {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(45, 122, 76, 0.25);
+    }
+    .btn-yes:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+    .btn-no {
+      background: #ffffff;
+      color: #4a5568;
+      border: 2px solid #cbd5e0;
+    }
+    .btn-no:hover {
+      background: #f7fafc;
+      border-color: #a0aec0;
+      transform: translateY(-2px);
+    }
+    .btn-back {
+      margin-top: 14px;
+      background: transparent;
+      border: none;
+      color: #a0aec0;
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-decoration: underline;
+      display: inline-block;
+      text-align: center;
+      width: 100%;
+    }
+    .btn-back:hover {
+      color: #718096;
+    }
+
+    /* 結果画面 */
+    .result-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .result-type-name {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: var(--primary-dark);
+      margin: 8px 0;
+    }
+    .result-subcatch {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    /* スコアグラフ */
+    .score-board {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 28px;
+    }
+    .score-board-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      text-align: center;
+    }
+    .score-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 0.88rem;
+    }
+    .score-label {
+      width: 170px;
+      font-weight: 600;
+    }
+    .score-bar-bg {
+      flex: 1;
+      height: 10px;
+      background: #e2e8f0;
+      border-radius: 5px;
+      overflow: hidden;
+      margin: 0 10px;
+    }
+    .score-bar-val {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 5px;
+      width: 0%;
+      transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .score-num {
+      width: 45px;
+      text-align: right;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    /* タイプ解説カード */
+    .advice-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-left: 5px solid var(--primary);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .advice-card h3 {
+      font-size: 1.15rem;
+      color: var(--primary-dark);
+      margin-bottom: 10px;
+    }
+    .advice-card h4 {
+      font-size: 0.95rem;
+      color: #2d3748;
+      margin: 14px 0 6px 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .advice-card p {
+      font-size: 0.92rem;
+      color: #4a5568;
+      margin-bottom: 10px;
+    }
+    .dialogue-box {
+      background: #f7fafc;
+      border: 1px dashed #cbd5e0;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin: 10px 0;
+      font-size: 0.88rem;
+    }
+    .dialogue-box .speaker {
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    /* 全タイプ一覧アコーディオン */
+    .other-types-box {
+      margin-top: 28px;
+      border-top: 1px solid var(--border-color);
+      padding-top: 20px;
+    }
+    .accordion-toggle {
+      width: 100%;
+      background: #edf2f7;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      color: #4a5568;
+      cursor: pointer;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+    .accordion-content {
+      display: none;
+      margin-top: 16px;
+    }
+    .accordion-content.open {
+      display: block;
+    }
+
+    /* CTAセクション */
+    .cta-area {
+      background: linear-gradient(135deg, var(--primary-light), #f0fdf4);
+      border: 2px solid #bbf7d0;
+      border-radius: 16px;
+      padding: 24px 20px;
+      text-align: center;
+      margin-top: 32px;
+    }
+    .cta-area h3 {
+      font-size: 1.15rem;
+      color: var(--primary-dark);
+      margin-bottom: 8px;
+    }
+    .cta-area p {
+      font-size: 0.88rem;
+      color: #374151;
+      margin-bottom: 16px;
+    }
+    .btn-cta {
+      display: inline-block;
+      width: 100%;
+      max-width: 320px;
+      background: var(--primary);
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 14px 20px;
+      border-radius: 10px;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(45, 122, 76, 0.25);
+      transition: background 0.2s;
+    }
+    .btn-cta:hover {
+      background: var(--primary-dark);
+    }
+    .btn-restart {
+      margin-top: 12px;
+      background: transparent;
+      border: none;
+      color: #718096;
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+
+  <!-- 1. スタート画面 -->
+  <div id="screen-start" class="screen active">
+    <div style="text-align:center;">
+      <span class="tag-badge">全28問 / 所要時間 約2分</span>
+      <h1 class="main-title">【婚活コミュニケーション診断】<br>ちゃんと話したのに、なぜ次につながらない？</h1>
+    </div>
+    
+    <p class="lead-desc" style="text-align:center;">
+      お見合いや初デートで一生懸命話したのに、なぜかご縁が続かない……。<br>
+      その原因は、あなたが気づいていない<strong>「無意識の会話のクセ」</strong>にあるかもしれません。
+    </p>
+
+    <div class="start-intro">
+      <strong>診断の進め方</strong>
+      <ul>
+        <li>28個の質問に「◯（当てはまる）」か「✕（当てはまらない）」で直感でお答えください。</li>
+        <li>良い・悪いではなく、あなたの会話の傾向（4タイプ）を可視化します。</li>
+        <li>診断後、すぐに具体的な対策アドバイスをご覧いただけます。</li>
+      </ul>
+    </div>
+
+    <button class="btn-choice btn-yes" onclick="startQuiz()">
+      診断をスタートする（無料）
+    </button>
+  </div>
+
+  <!-- 2. 設問画面 -->
+  <div id="screen-quiz" class="screen">
+    <div class="progress-container">
+      <div class="progress-info">
+        <span>診断中：<span id="group-name">グループA</span></span>
+        <span><span class="curr-q" id="q-current">1</span> / <span id="q-total">28</span></span>
+      </div>
+      <div class="progress-track">
+        <div id="progress-bar" class="progress-fill"></div>
+      </div>
+    </div>
+
+    <div id="question-text" class="question-card">
+      質問文がここに入ります
+    </div>
+
+    <div class="answer-actions">
+      <button class="btn-choice btn-yes" onclick="handleAnswer(1)">
+        ◯&nbsp;&nbsp;わりと当てはまる
+      </button>
+      <button class="btn-choice btn-no" onclick="handleAnswer(0)">
+        ✕&nbsp;&nbsp;あまり当てはまらない
+      </button>
+    </div>
+
+    <button id="btn-back" class="btn-back" onclick="handleBack()">← 前の質問に戻る</button>
+  </div>
+
+  <!-- 3. 結果画面 -->
+  <div id="screen-result" class="screen">
+    <div class="result-header">
+      <span class="tag-badge">あなたの診断結果</span>
+      <div id="res-type-title" class="result-type-name">判定中</div>
+      <div id="res-type-sub" class="result-subcatch"></div>
+    </div>
+
+    <!-- スコア内訳グラフ -->
+    <div class="score-board">
+      <div class="score-board-title">📊 タイプ別スコア内訳（各7問中）</div>
+      
+      <div class="score-item">
+        <div class="score-label">A. 質問面接傾向</div>
+        <div class="score-bar-bg"><div id="bar-a" class="score-bar-val"></div></div>
+        <div class="score-num" id="score-a">0個</div>
+      </div>
+      <div class="score-item">
+        <div class="score-label">B. 受け身傾向</div>
+        <div class="score-bar-bg"><div id="bar-b" class="score-bar-val"></div></div>
+        <div class="score-num" id="score-b">0個</div>
+      </div>
+      <div class="score-item">
+        <div class="score-label">C. 一生懸命アピール傾向</div>
+        <div class="score-bar-bg"><div id="bar-c" class="score-bar-val"></div></div>
+        <div class="score-num" id="score-c">0個</div>
+      </div>
+      <div class="score-item">
+        <div class="score-label">D. 正解探し傾向</div>
+        <div class="score-bar-bg"><div id="bar-d" class="score-bar-val"></div></div>
+        <div class="score-num" id="score-d">0個</div>
+      </div>
+    </div>
+
+    <!-- メイン診断結果カード -->
+    <div id="primary-advice-container"></div>
+
+    <!-- 全タイプ解説トグル -->
+    <div class="other-types-box">
+      <button class="accordion-toggle" onclick="toggleAccordion()">
+        ▼ 他のタイプの特徴・アドバイスもすべて見る
+      </button>
+      <div id="all-types-container" class="accordion-content"></div>
+    </div>
+
+    <!-- メルマガ・行動促進CTA -->
+    <div class="cta-area">
+      <h3>🍀 雑談できる♪通信 🍀</h3>
+      <p>
+        会話のクセは、気づくことさえできれば少しずつ変えていけます。<br>
+        「人と心地よく話すヒント」や婚活での会話術を無料メルマガでお届けしています。
+      </p>
+      <a href="https://note.com/bright_laelia398" target="_blank" class="btn-cta">
+        無料メルマガのご案内を見る
+      </a>
+      <br>
+      <button class="btn-restart" onclick="restartQuiz()">もう一度診断する</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // 全28問データ
+  const quizData = [
+    // グループA (Q1-Q7)
+    { type: 'A', group: 'Aの質問（質問傾向）', text: '会話が途切れると、「何か質問しなきゃ」と焦る' },
+    { type: 'A', group: 'Aの質問（質問傾向）', text: '相手の答えを聞きながら、次に何を質問するか考えていることがある' },
+    { type: 'A', group: 'Aの質問（質問傾向）', text: 'お見合いやデートの前に、質問をいくつか考えておくことがある' },
+    { type: 'A', group: 'Aの質問（質問傾向）', text: '相手が答えたあと、その話を広げるより別の質問へ移ることが多い' },
+    { type: 'A', group: 'Aの質問（質問傾向）', text: '沈黙になるくらいなら、質問を続けた方がいいと思う' },
+    { type: 'A', group: 'Aの質問（質問傾向）', text: '相手の気持ちより、「何があったのか」を詳しく聞くことが多い' },
+    { type: 'A', group: 'Aの質問（質問傾向）', text: '「どこに行った？」「何を食べた？」など、事実についての質問が多くなりやすい' },
+
+    // グループB (Q8-Q14)
+    { type: 'B', group: 'Bの質問（受け身傾向）', text: '相手がたくさん話してくれた日は、「今日は会話がうまくいった」と感じる' },
+    { type: 'B', group: 'Bの質問（受け身傾向）', text: '自分から話題を出すより、相手から話してくれた方が楽だ' },
+    { type: 'B', group: 'Bの質問（受け身傾向）', text: '聞き役になっていれば、相手には好印象だと思う' },
+    { type: 'B', group: 'Bの質問（受け身傾向）', text: '相手から質問されないと、自分の話をするきっかけがつかみにくい' },
+    { type: 'B', group: 'Bの質問（受け身傾向）', text: '会話を盛り上げるのは、話すのが得意な方がやってくれたら助かると思う' },
+    { type: 'B', group: 'Bの質問（受け身傾向）', text: '相手の話をうなずきながら聞いていれば、会話は成立していると思う' },
+    { type: 'B', group: 'Bの質問（受け身傾向）', text: '自分から会話を広げるより、相手から話題を振ってもらえるとありがたい' },
+
+    // グループC (Q15-Q21)
+    { type: 'C', group: 'Cの質問（アピール傾向）', text: 'お見合いやデートでは、自分のことをきちんと知ってもらいたいと思う' },
+    { type: 'C', group: 'Cの質問（アピール傾向）', text: '自分の仕事や趣味について、つい詳しく説明してしまうことがある' },
+    { type: 'C', group: 'Cの質問（アピール傾向）', text: '自分のよさを知ってもらえれば、交際につながりやすくなると思う' },
+    { type: 'C', group: 'Cの質問（アピール傾向）', text: '自分の経験や知識を話しているうちに、気づくと話が長くなっていることがある' },
+    { type: 'C', group: 'Cの質問（アピール傾向）', text: '相手の話を聞いていて、自分にも似た経験があると、すぐ自分の話をしたくなる' },
+    { type: 'C', group: 'Cの質問（アピール傾向）', text: '自分を誤解されたくなくて、説明が多くなることがある' },
+    { type: 'C', group: 'Cの質問（アピール傾向）', text: '相手の反応があまりよくなくても、伝えたいことは最後まで話すことがある' },
+
+    // グループD (Q22-Q28)
+    { type: 'D', group: 'Dの質問（正解探し傾向）', text: '「こういうとき、なんて返すのが正解なんだろう？」と考えることが多い' },
+    { type: 'D', group: 'Dの質問（正解探し傾向）', text: 'LINEを送る頻度やタイミングの「正解」が気になる' },
+    { type: 'D', group: 'Dの質問（正解探し傾向）', text: '「女性に好かれる話し方」「婚活で好印象な会話」などを調べることがある' },
+    { type: 'D', group: 'Dの質問（正解探し傾向）', text: '相手の言葉にどう返したらいいかわからず、困ることがある' },
+    { type: 'D', group: 'Dの質問（正解探し傾向）', text: '「初デートではこれを話す」など、会話の型があると安心する' },
+    { type: 'D', group: 'Dの質問（正解探し傾向）', text: '相手によって対応を変えるより、まずは「うまくいく会話の方法」を知りたい' },
+    { type: 'D', group: 'Dの質問（正解探し傾向）', text: '婚活がうまくいかなかったとき、「何を言えばよかったんだろう」と考えることが多い' }
+  ];
+
+  // 各タイプの詳細テキストデータ（記事原稿より完全収録）
+  const typeMaster = {
+    A: {
+      name: '質問面接タイプ',
+      catch: 'その質問、会話になっていますか？',
+      features: '「沈黙にならないように」「相手を知ろう」と一生懸命質問しているのに、相手からは「面接みたいだった」と感じられてしまうタイプです。相手の答えを聞いた瞬間「次は何を聞こう？」と考えてしまい、相手の言葉を受け取る前に次の質問へ進んでしまいがちです。',
+      dialogue: `
+        <strong>【よくある会話】</strong><br>
+        「休日は何を？」「旅行です」<br>
+        「どこに行きました？」「鎌倉です」<br>
+        「何を食べました？」「お蕎麦です」<br>
+        <em>➔ 質問と回答の連続で、相手は取り調べや面接のように感じてしまいます。</em>
+      `,
+      actionTitle: '今日からできる一歩：「次に何を質問する？」ではなく「今の言葉から何が浮かんだ？」',
+      action: '相手の言葉を一度「鎌倉いいですね」と受け止め、自分に浮かんだこと（連想）を返してみましょう。「今の時期、混んでませんでした？」「海も近いし歩くだけで気持ちいいですよね」「私も行きたくなってきました（笑）」など、感じたことを返すだけで「二人で奏でる会話」に変わります。'
+    },
+    B: {
+      name: '受け身タイプ',
+      catch: '「たくさん話してくれた＝会話が盛り上がった」ではない？',
+      features: '「自分は話すのが得意じゃないから聞き役に徹しよう」と考え、相手がたくさん話してくれた日に「うまくいった」と感じるタイプです。しかし相手からすると「私ばっかり話題を出して会話をつないでいた……」と負担を感じていた可能性があります。',
+      dialogue: `
+        <strong>【意識したい会話例】</strong><br>
+        相手「最近、パン屋さん巡りにハマってるんです」<br>
+        あなた「そうなんですね」（←これだけで終わらせない！）<br>
+        ➔「パン屋さん巡りいいですね！実は僕もパン好きで、駅前にできた新店舗が気になってたんですよ。〇〇さんのお気に入りのお店ってどこですか？」
+      `,
+      actionTitle: '今日からできる一歩：「聞いたら、自分のことも少し乗せて返す」',
+      action: '会話は一人が話して一人が聞くだけでは成立しません。相手が出してくれた話題に対して「自分も好き」「実は気になっていた」と少しだけ自分の想いや情報を乗せて返すと、相手も次の話題を振りやすくなります。'
+    },
+    C: {
+      name: '一生懸命アピールタイプ',
+      catch: '「自分を知ってもらうこと」に夢中になっていませんか？',
+      features: '「せっかくの機会だから自分の良さをきちんと知ってもらいたい」と一生懸命話すタイプです。しかし「何を伝えるか」に意識が向きすぎて、相手の表情や反応（退屈していないか、相づちだけになっていないか）を見落としてプレゼン状態になってしまうことがあります。',
+      dialogue: `
+        <strong>【意識したい視点】</strong><br>
+        「ゴルフが趣味で、10年やってて月○回コースに出て…」と熱弁する前に、相手の表情を見る。<br>
+        ➔「〇〇さんは、何か休日にハマっているものや趣味ってありますか？」とボールを渡す。
+      `,
+      actionTitle: '今日からできる一歩：「自分をどれだけ伝えたか」より「二人でどんな時間を過ごせたか」',
+      action: '会話は自分のプレゼンではありません。自分の話を少ししたら一度相手の表情を見て、「〇〇さんはどうですか？」とボールを相手に渡してみましょう。相手の表情の中に、次の会話のヒントが隠れています。'
+    },
+    D: {
+      name: '正解探しタイプ',
+      catch: 'その「正解」、目の前の相手にも正解ですか？',
+      features: '「失敗したくない」「嫌な思いをさせたくない」という思いやりが人一倍強いタイプです。その分、「なんて返すのが正解？」「LINEの正解頻度は？」とマニュアルやテクニックを探しすぎて、目の前の相手自身の気持ちが見えなくなってしまうことがあります。',
+      dialogue: `
+        <strong>【意識したい寄り添い】</strong><br>
+        相手「最近ちょっと忙しくて、休みの日は家でのんびりしてます」<br>
+        ✕「じゃあ趣味は何ですか？」（マニュアル通りに次の質問へ進む）<br>
+        ◯「お仕事忙しいんですね。それは疲れちゃいますよね」（相手の今の気持ちを労う）
+      `,
+      actionTitle: '今日からできる一歩：「なんて返すのが正解？」の前に「今どんな気持ちかな？」と想像する',
+      action: '会話にたったひとつの万能な正解はありません。テクニックを思い出す前に、目の前の相手の表情や声のトーンを見て「今どんな気持ちかな？」と想像してみましょう。その思いやりこそが最高のコミュニケーションになります。'
+    }
+  };
+
+  let currentIndex = 0;
+  let userAnswers = []; // 各設問の回答履歴 [1, 0, 1, ...]
+
+  function showScreen(screenId) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(screenId).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function startQuiz() {
+    currentIndex = 0;
+    userAnswers = [];
+    showScreen('screen-quiz');
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    const q = quizData[currentIndex];
+    document.getElementById('q-current').innerText = currentIndex + 1;
+    document.getElementById('q-total').innerText = quizData.length;
+    document.getElementById('group-name').innerText = q.group;
+    document.getElementById('question-text').innerText = q.text;
+
+    const progressPercent = ((currentIndex) / quizData.length) * 100;
+    document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+
+    // 1問目は戻るボタンを非表示
+    document.getElementById('btn-back').style.display = currentIndex === 0 ? 'none' : 'inline-block';
+  }
+
+  function handleAnswer(val) {
+    userAnswers[currentIndex] = val;
+    currentIndex++;
+
+    if (currentIndex < quizData.length) {
+      renderQuestion();
+    } else {
+      showResult();
+    }
+  }
+
+  function handleBack() {
+    if (currentIndex > 0) {
+      currentIndex--;
+      renderQuestion();
+    }
+  }
+
+  function calculateScores() {
+    const scores = { A: 0, B: 0, C: 0, D: 0 };
+    userAnswers.forEach((ans, idx) => {
+      if (ans === 1) {
+        const type = quizData[idx].type;
+        scores[type]++;
+      }
+    });
+    return scores;
+  }
+
+  function showResult() {
+    const scores = calculateScores();
+    showScreen('screen-result');
+
+    // スコア表示・バーアニメーション
+    ['a', 'b', 'c', 'd'].forEach(k => {
+      const upper = k.toUpperCase();
+      const val = scores[upper];
+      document.getElementById(`score-${k}`).innerText = `${val} 個`;
+      const pct = (val / 7) * 100;
+      setTimeout(() => {
+        document.getElementById(`bar-${k}`).style.width = `${pct}%`;
+      }, 100);
+    });
+
+    // 最高得点判定
+    const maxVal = Math.max(scores.A, scores.B, scores.C, scores.D);
+    const topTypes = Object.keys(scores).filter(k => scores[k] === maxVal && scores[k] > 0);
+
+    const titleEl = document.getElementById('res-type-title');
+    const subEl = document.getElementById('res-type-sub');
+    const primaryContainer = document.getElementById('primary-advice-container');
+    primaryContainer.innerHTML = '';
+
+    if (topTypes.length === 0) {
+      titleEl.innerText = 'バランス良好・自然体タイプ';
+      subEl.innerText = '特定の会話のクセが少なく、自然体でやり取りができています';
+      primaryContainer.innerHTML = `
+        <div class="advice-card">
+          <h3>自然体で心地よいコミュニケーション</h3>
+          <p>今回の診断では特定の強いクセは見られませんでした。引き続き、目の前の相手とのキャッチボールを楽しんでくださいね。</p>
+        </div>
+      `;
+    } else {
+      const typeNames = topTypes.map(t => typeMaster[t].name).join(' ✕ ');
+      titleEl.innerText = `${typeNames}`;
+      subEl.innerText = topTypes.length > 1 ? '複数の傾向をあわせ持つ複合タイプです' : typeMaster[topTypes[0]].catch;
+
+      topTypes.forEach(t => {
+        primaryContainer.innerHTML += renderAdviceCard(t);
+      });
+    }
+
+    // 全タイプ一覧の生成
+    const allContainer = document.getElementById('all-types-container');
+    allContainer.innerHTML = '';
+    ['A', 'B', 'C', 'D'].forEach(t => {
+      allContainer.innerHTML += renderAdviceCard(t);
+    });
+  }
+
+  function renderAdviceCard(typeKey) {
+    const d = typeMaster[typeKey];
+    return `
+      <div class="advice-card">
+        <h3>【${d.name}】</h3>
+        <p style="font-weight:700; color:var(--accent); font-size:0.92rem; margin-bottom:8px;">${d.catch}</p>
+        <h4>🔍 このタイプの特徴と盲点</h4>
+        <p>${d.features}</p>
+        <div class="dialogue-box">${d.dialogue}</div>
+        <h4>💡 ${d.actionTitle}</h4>
+        <p>${d.action}</p>
+      </div>
+    `;
+  }
+
+  function toggleAccordion() {
+    const el = document.getElementById('all-types-container');
+    el.classList.toggle('open');
+    const btn = document.querySelector('.accordion-toggle');
+    btn.innerText = el.classList.contains('open') ? '▲ 閉じる' : '▼ 他のタイプの特徴・アドバイスもすべて見る';
+  }
+
+  function restartQuiz() {
+    startQuiz();
+  }
+</script>
+
+</body>
+</html>
