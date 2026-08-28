@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initCardFlip();
   initFacebookReactions();
   initSpotlight();
+  initFavoritesAndPagination();
 });
 
 /**
@@ -28,26 +29,63 @@ function initSpotlight() {
 }
 
 /**
- * ① カードの裏返し（3Dフリップ）制御
+ * ① カードの裏返し（3Dフリップ＆1.5倍拡大）＆排他制御＆「済」スタンプ記録
  */
 function initCardFlip() {
   const cards = document.querySelectorAll('.art-card');
+  let readCards = JSON.parse(localStorage.getItem('goleader_read_cards') || '[]');
+
+  // 初期の「済」状態を反映
+  cards.forEach(card => {
+    const cardId = card.getAttribute('data-id');
+    if (readCards.includes(cardId)) {
+      card.classList.add('is-read');
+    }
+  });
 
   cards.forEach(card => {
     // カード全体クリックで裏返しをトグル
     card.addEventListener('click', (e) => {
-      // リアクション関連UIやリンクが押されたときは裏返さない
+      // リアクション関連UIやお気に入りボタン、リンクが押されたときは裏返さない
       if (
         e.target.closest('.fb-react-container') || 
         e.target.closest('.fb-reactions-dock') || 
         e.target.closest('.fb-main-btn') || 
         e.target.closest('.dock-item') || 
+        e.target.closest('.fav-btn') || 
         e.target.closest('a')
       ) {
         return;
       }
       
-      card.classList.toggle('flipped');
+      const isCurrentlyFlipped = card.classList.contains('flipped');
+
+      // 別のカードをすべて表向き（元）に戻す
+      cards.forEach(c => {
+        if (c !== card) {
+          c.classList.remove('flipped');
+        }
+      });
+
+      if (!isCurrentlyFlipped) {
+        // カードを裏返す（1.5倍拡大表示）
+        card.classList.add('flipped');
+
+        // 一度でも読んだカードとして「済」を記録
+        const cardId = card.getAttribute('data-id');
+        if (cardId && !readCards.includes(cardId)) {
+          readCards.push(cardId);
+          try {
+            localStorage.setItem('goleader_read_cards', JSON.stringify(readCards));
+          } catch (err) {
+            console.warn('読了記録の保存に失敗:', err);
+          }
+        }
+        card.classList.add('is-read');
+      } else {
+        // 既に裏返っている場合は元に戻す
+        card.classList.remove('flipped');
+      }
     });
 
     // 裏面の戻るボタン
@@ -57,6 +95,13 @@ function initCardFlip() {
         e.stopPropagation();
         card.classList.remove('flipped');
       });
+    }
+  });
+
+  // 画面の外（余白）をクリックしたときにも拡大裏面を閉じる
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.art-card')) {
+      cards.forEach(c => c.classList.remove('flipped'));
     }
   });
 }
@@ -75,7 +120,9 @@ function initFacebookReactions() {
   const initialCounts = {
     '001': { wakaru: 18, omoro: 7, majide: 3, sorena: 12, hee: 2, ahona: 4 },
     '002': { wakaru: 31, omoro: 9, majide: 5, sorena: 45, hee: 4, ahona: 8 },
-    '003': { wakaru: 24, omoro: 6, majide: 2, sorena: 38, hee: 8, ahona: 3 }
+    '003': { wakaru: 24, omoro: 6, majide: 2, sorena: 38, hee: 8, ahona: 3 },
+    '004': { wakaru: 42, omoro: 15, majide: 8, sorena: 56, hee: 6, ahona: 11 },
+    '005': { wakaru: 58, omoro: 28, majide: 4, sorena: 33, hee: 12, ahona: 7 }
   };
 
   const storedCounts = JSON.parse(localStorage.getItem('goleader_reaction_counts') || JSON.stringify(initialCounts));
@@ -302,4 +349,209 @@ function saveData(userSelections, storedCounts) {
   } catch (err) {
     console.warn('LocalStorage save failed:', err);
   }
+}
+
+/**
+ * ④ お気に入り保存機能＆10件ごとのページネーション制御
+ */
+function initFavoritesAndPagination() {
+  const ITEMS_PER_PAGE = 10;
+  let currentPage = 1;
+  let currentFilter = 'all'; // 'all' or 'favorites'
+
+  const allCards = Array.from(document.querySelectorAll('.art-card'));
+  const favBtns = document.querySelectorAll('.fav-btn');
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const countAllEl = document.getElementById('countAll');
+  const countFavEl = document.getElementById('countFav');
+  const countInfoEl = document.getElementById('galleryCountInfo');
+  const paginationEl = document.getElementById('galleryPagination');
+  const artGrid = document.getElementById('artGrid');
+
+  // お気に入りIDリストの読み込み
+  let favorites = JSON.parse(localStorage.getItem('goleader_favorites') || '[]');
+
+  // 各カードのお気に入り状態を初期化
+  function syncFavoriteButtons() {
+    favBtns.forEach(btn => {
+      const cardId = btn.getAttribute('data-card-id');
+      const isFav = favorites.includes(cardId);
+      const icon = btn.querySelector('i');
+      if (isFav) {
+        btn.classList.add('is-fav');
+        if (icon) {
+          icon.classList.remove('fa-regular');
+          icon.classList.add('fa-solid');
+        }
+        btn.setAttribute('title', 'お気に入りから解除');
+      } else {
+        btn.classList.remove('is-fav');
+        if (icon) {
+          icon.classList.remove('fa-solid');
+          icon.classList.add('fa-regular');
+        }
+        btn.setAttribute('title', 'お気に入りに保存');
+      }
+    });
+
+    // 件数バッジ更新
+    if (countAllEl) countAllEl.textContent = String(allCards.length);
+    if (countFavEl) countFavEl.textContent = String(favorites.length);
+  }
+
+  // お気に入りトグル処理
+  favBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation(); // フリップ防止
+      const cardId = btn.getAttribute('data-card-id');
+      const index = favorites.indexOf(cardId);
+
+      if (index === -1) {
+        favorites.push(cardId);
+      } else {
+        favorites.splice(index, 1);
+      }
+
+      localStorage.setItem('goleader_favorites', JSON.stringify(favorites));
+      syncFavoriteButtons();
+      renderGallery();
+    });
+  });
+
+  // フィルター切り替え処理
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentFilter = btn.getAttribute('data-filter') || 'all';
+      currentPage = 1;
+      renderGallery();
+    });
+  });
+
+  // ギャラリー表示とページネーションのレンダリング
+  function renderGallery() {
+    // 1. フィルター適用
+    const visibleCards = allCards.filter(card => {
+      const cardId = card.getAttribute('data-id');
+      if (currentFilter === 'favorites') {
+        return favorites.includes(cardId);
+      }
+      return true;
+    });
+
+    const totalItems = visibleCards.length;
+    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE) || 1;
+
+    if (currentPage > totalPages) {
+      currentPage = totalPages;
+    }
+
+    // 2. 該当ページのアイテムを抽出
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+
+    // 空表示要素のチェックと削除
+    const existingEmpty = artGrid.querySelector('.empty-favorites');
+    if (existingEmpty) {
+      existingEmpty.remove();
+    }
+
+    if (totalItems === 0) {
+      allCards.forEach(card => card.style.display = 'none');
+      const emptyDiv = document.createElement('div');
+      emptyDiv.className = 'empty-favorites';
+      emptyDiv.innerHTML = `
+        <i class="fa-regular fa-star"></i>
+        <h3>お気に入りの言霊はまだありません</h3>
+        <p>作品カード右上の星マーク（☆）をタップすると、ここに保存されます。</p>
+      `;
+      artGrid.appendChild(emptyDiv);
+      if (countInfoEl) countInfoEl.textContent = '0件';
+      if (paginationEl) paginationEl.innerHTML = '';
+      return;
+    }
+
+    // 全カードの表示・非表示を切り替え
+    allCards.forEach(card => {
+      card.style.display = 'none';
+    });
+
+    const pageCards = visibleCards.slice(startIndex, endIndex);
+    pageCards.forEach(card => {
+      card.style.display = 'flex';
+    });
+
+    // 3. 表示件数情報の更新
+    if (countInfoEl) {
+      const displayStart = startIndex + 1;
+      const displayEnd = Math.min(endIndex, totalItems);
+      countInfoEl.textContent = `${totalItems}作品中 ${displayStart}〜${displayEnd}件を表示`;
+    }
+
+    // 4. ページネーションボタンの生成
+    renderPagination(totalPages);
+  }
+
+  function renderPagination(totalPages) {
+    if (!paginationEl) return;
+    paginationEl.innerHTML = '';
+
+    // 1ページのみの場合はページネーションボタンを非表示
+    if (totalPages <= 1) {
+      return;
+    }
+
+    // 前へボタン
+    const prevBtn = document.createElement('button');
+    prevBtn.className = 'page-btn';
+    prevBtn.innerHTML = '<i class="fa-solid fa-chevron-left"></i> 前へ';
+    prevBtn.disabled = (currentPage === 1);
+    prevBtn.addEventListener('click', () => {
+      if (currentPage > 1) {
+        currentPage--;
+        renderGallery();
+        scrollToGallery();
+      }
+    });
+    paginationEl.appendChild(prevBtn);
+
+    // 各ページ番号ボタン
+    for (let i = 1; i <= totalPages; i++) {
+      const pageBtn = document.createElement('button');
+      pageBtn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+      pageBtn.textContent = String(i);
+      pageBtn.addEventListener('click', () => {
+        currentPage = i;
+        renderGallery();
+        scrollToGallery();
+      });
+      paginationEl.appendChild(pageBtn);
+    }
+
+    // 次へボタン
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'page-btn';
+    nextBtn.innerHTML = '次へ <i class="fa-solid fa-chevron-right"></i>';
+    nextBtn.disabled = (currentPage === totalPages);
+    nextBtn.addEventListener('click', () => {
+      if (currentPage < totalPages) {
+        currentPage++;
+        renderGallery();
+        scrollToGallery();
+      }
+    });
+    paginationEl.appendChild(nextBtn);
+  }
+
+  function scrollToGallery() {
+    const gallery = document.querySelector('.gallery-container');
+    if (gallery) {
+      gallery.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  // 初回同期とレンダリング
+  syncFavoriteButtons();
+  renderGallery();
 }
