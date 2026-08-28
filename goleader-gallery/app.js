@@ -108,14 +108,22 @@ function initCardFlip() {
 
 /**
  * ② Facebook完全再現リアクション機能
- * - ホバー/長押しでフローティングドック表示
- * - 絵文字のホバー拡大＆ツールチップ
- * - 選択時のメインボタン変化＆カウント/アイコンスタック更新
- * - 舞い上がるフローティング絵文字アニメーション
  */
 function initFacebookReactions() {
+  // 古いLocalStorageのダミーデータを強制クリア（完全リセット）
+  const resetFlag = 'goleader_reset_done_20260828_final';
+  if (!localStorage.getItem(resetFlag)) {
+    localStorage.removeItem('goleader_user_reactions');
+    localStorage.removeItem('goleader_reaction_counts');
+    localStorage.removeItem('goleader_user_reactions_v2');
+    localStorage.removeItem('goleader_reaction_counts_v2');
+    localStorage.removeItem('goleader_user_reactions_v3');
+    localStorage.removeItem('goleader_reaction_counts_v3');
+    localStorage.setItem(resetFlag, 'true');
+  }
+
   // 保存されたリアクション状態を復元（カードごとの選択状態）
-  const userSelections = JSON.parse(localStorage.getItem('goleader_user_reactions_v3') || '{}');
+  const userSelections = JSON.parse(localStorage.getItem('goleader_user_reactions_v4') || '{}');
   // 各カードのカウントデータ（リセット状態：すべて0）
   const initialCounts = {
     '001': { wakaru: 0, omoro: 0, majide: 0, sorena: 0, hee: 0, ahona: 0 },
@@ -128,7 +136,7 @@ function initFacebookReactions() {
     '008': { wakaru: 0, omoro: 0, majide: 0, sorena: 0, hee: 0, ahona: 0 }
   };
 
-  const storedCounts = JSON.parse(localStorage.getItem('goleader_reaction_counts_v3') || JSON.stringify(initialCounts));
+  const storedCounts = JSON.parse(localStorage.getItem('goleader_reaction_counts_v4') || JSON.stringify(initialCounts));
 
   const containers = document.querySelectorAll('.fb-react-container');
 
@@ -233,8 +241,8 @@ function initFacebookReactions() {
   // データ保存用ヘルパー
   function saveData(userSel, counts) {
     try {
-      localStorage.setItem('goleader_user_reactions_v3', JSON.stringify(userSel));
-      localStorage.setItem('goleader_reaction_counts_v3', JSON.stringify(counts));
+      localStorage.setItem('goleader_user_reactions_v4', JSON.stringify(userSel));
+      localStorage.setItem('goleader_reaction_counts_v4', JSON.stringify(counts));
     } catch (e) {
       console.warn('LocalStorage save error:', e);
     }
@@ -312,15 +320,6 @@ function updateFacebookSummary(card, countObj, triggerPop = false) {
       span.style.zIndex = String(5 - idx);
       stackEl.appendChild(span);
     });
-
-    if (topThree.length === 0) {
-      const defaultSpan = document.createElement('span');
-      defaultSpan.className = 'fb-mini-icon';
-      defaultSpan.style.background = '#1877f2';
-      defaultSpan.style.color = '#ffffff';
-      defaultSpan.textContent = '👍';
-      stackEl.appendChild(defaultSpan);
-    }
   }
 }
 
@@ -350,18 +349,6 @@ function spawnFloatingEmoji(targetEl, emoji, card) {
   bubble.addEventListener('animationend', () => {
     bubble.remove();
   });
-}
-
-/**
- * LocalStorageへの保存
- */
-function saveData(userSelections, storedCounts) {
-  try {
-    localStorage.setItem('goleader_user_reactions', JSON.stringify(userSelections));
-    localStorage.setItem('goleader_reaction_counts', JSON.stringify(storedCounts));
-  } catch (err) {
-    console.warn('LocalStorage save failed:', err);
-  }
 }
 
 /**
