@@ -122,7 +122,10 @@ function initFacebookReactions() {
     '002': { wakaru: 31, omoro: 9, majide: 5, sorena: 45, hee: 4, ahona: 8 },
     '003': { wakaru: 24, omoro: 6, majide: 2, sorena: 38, hee: 8, ahona: 3 },
     '004': { wakaru: 42, omoro: 15, majide: 8, sorena: 56, hee: 6, ahona: 11 },
-    '005': { wakaru: 58, omoro: 28, majide: 4, sorena: 33, hee: 12, ahona: 7 }
+    '005': { wakaru: 58, omoro: 28, majide: 4, sorena: 33, hee: 12, ahona: 7 },
+    '006': { wakaru: 35, omoro: 12, majide: 8, sorena: 48, hee: 4, ahona: 6 },
+    '007': { wakaru: 52, omoro: 18, majide: 6, sorena: 62, hee: 5, ahona: 9 },
+    '008': { wakaru: 65, omoro: 24, majide: 11, sorena: 78, hee: 9, ahona: 15 }
   };
 
   const storedCounts = JSON.parse(localStorage.getItem('goleader_reaction_counts') || JSON.stringify(initialCounts));
