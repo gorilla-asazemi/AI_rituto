@@ -115,20 +115,20 @@ function initCardFlip() {
  */
 function initFacebookReactions() {
   // 保存されたリアクション状態を復元（カードごとの選択状態）
-  const userSelections = JSON.parse(localStorage.getItem('goleader_user_reactions') || '{}');
-  // 各カードのカウントデータ（なければ初期データ）
+  const userSelections = JSON.parse(localStorage.getItem('goleader_user_reactions_v3') || '{}');
+  // 各カードのカウントデータ（リセット状態：すべて0）
   const initialCounts = {
-    '001': { wakaru: 18, omoro: 7, majide: 3, sorena: 12, hee: 2, ahona: 4 },
-    '002': { wakaru: 31, omoro: 9, majide: 5, sorena: 45, hee: 4, ahona: 8 },
-    '003': { wakaru: 24, omoro: 6, majide: 2, sorena: 38, hee: 8, ahona: 3 },
-    '004': { wakaru: 42, omoro: 15, majide: 8, sorena: 56, hee: 6, ahona: 11 },
-    '005': { wakaru: 58, omoro: 28, majide: 4, sorena: 33, hee: 12, ahona: 7 },
-    '006': { wakaru: 35, omoro: 12, majide: 8, sorena: 48, hee: 4, ahona: 6 },
-    '007': { wakaru: 52, omoro: 18, majide: 6, sorena: 62, hee: 5, ahona: 9 },
-    '008': { wakaru: 65, omoro: 24, majide: 11, sorena: 78, hee: 9, ahona: 15 }
+    '001': { wakaru: 0, omoro: 0, majide: 0, sorena: 0, hee: 0, ahona: 0 },
+    '002': { wakaru: 0, omoro: 0, majide: 0, sorena: 0, hee: 0, ahona: 0 },
+    '003': { wakaru: 0, omoro: 0, majide: 0, sorena: 0, hee: 0, ahona: 0 },
+    '004': { wakaru: 0, omoro: 0, majide: 0, sorena: 0, hee: 0, ahona: 0 },
+    '005': { wakaru: 0, omoro: 0, majide: 0, sorena: 0, hee: 0, ahona: 0 },
+    '006': { wakaru: 0, omoro: 0, majide: 0, sorena: 0, hee: 0, ahona: 0 },
+    '007': { wakaru: 0, omoro: 0, majide: 0, sorena: 0, hee: 0, ahona: 0 },
+    '008': { wakaru: 0, omoro: 0, majide: 0, sorena: 0, hee: 0, ahona: 0 }
   };
 
-  const storedCounts = JSON.parse(localStorage.getItem('goleader_reaction_counts') || JSON.stringify(initialCounts));
+  const storedCounts = JSON.parse(localStorage.getItem('goleader_reaction_counts_v3') || JSON.stringify(initialCounts));
 
   const containers = document.querySelectorAll('.fb-react-container');
 
@@ -144,7 +144,7 @@ function initFacebookReactions() {
 
     // 初期カウントのセット
     if (!storedCounts[cardId]) {
-      storedCounts[cardId] = { wakaru: 10, omoro: 5, majide: 2, sorena: 8, hee: 3, ahona: 1 };
+      storedCounts[cardId] = { wakaru: 0, omoro: 0, majide: 0, sorena: 0, hee: 0, ahona: 0 };
     }
 
     // 保存されているユーザーのリアクションがあれば反映
@@ -229,6 +229,16 @@ function initFacebookReactions() {
       clearTimeout(pressTimer);
     }, { passive: true });
   });
+
+  // データ保存用ヘルパー
+  function saveData(userSel, counts) {
+    try {
+      localStorage.setItem('goleader_user_reactions_v3', JSON.stringify(userSel));
+      localStorage.setItem('goleader_reaction_counts_v3', JSON.stringify(counts));
+    } catch (e) {
+      console.warn('LocalStorage save error:', e);
+    }
+  }
 }
 
 /**
